@@ -1,0 +1,49 @@
+User:
+-----
+We have an application in which the back end has some endpoints that are visible only from the admin and supports http get/post methods such as [POST] /admin/upload/titlebasics. 
+In this application a user/visitor searches movies based on some criterias and when they select a movie, information about it are shown. Also they can find actor and contributor details. 
+If someone is a registered user they can also add like/dislike to a movie or add a movie to their watchlist.
+How could i implement a deployment diagram?
+
+ChatGPT:
+-------
+Based on the additional information you provided, here's an updated example of a deployment diagram for your application:
+@startuml
+node "Web Server" as webserver {
+    component "Web Application" as webapp
+}
+
+node "Application Server" as appserver {
+    component "User Management" as usermgmt
+    component "Movie Management" as moviemgmt
+    component "Search Engine" as searchengine
+    component "Admin API" as adminapi
+    component "Movie Database" as moviedb
+    component "User Database" as userdb
+}
+
+database "Movie Database" as moviedb
+database "User Database" as userdb
+
+webapp --> usermgmt: User registration, login, watchlist, like/dislike
+webapp --> searchengine: Movie search, movie details, actor details
+usermgmt --> userdb: User data storage
+moviemgmt --> moviedb: Movie data storage
+searchengine --> moviedb: Movie and actor data retrieval
+adminapi --> moviemgmt: Admin-only operations
+adminapi --> moviedb: Admin-only data access
+
+@enduml
+
+In this updated deployment diagram:
+
+The "Web Server" node represents the server hosting the web application.
+The "Application Server" node represents the server hosting the backend application components.
+The "User Management," "Movie Management," "Search Engine," and "Admin API" components represent the specific functionalities of your application.
+The "Movie Database" component represents the database storing movie-related data.
+The "User Database" component represents the database storing user-related data.
+The arrows indicate the communication paths between the components. The web application communicates with the user management component for user-related 
+actions like registration, login, watchlist, and like/dislike. It also communicates with the search engine component for movie-related actions like searching movies, 
+viewing movie details, and actor details.
+
+This deployment diagram provides an overview of how the components in your application are deployed on different servers and how they communicate with each other and with the respective databases.
