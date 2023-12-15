@@ -1,0 +1,23 @@
+User:
+-----
+
+We have an application that has movies and people will search them, find info about them.
+But the first use case has to do with the user logging in the app, having the ability to like/dislike a movie and add them in a "watch later" list
+How to do the uml sequence diagram.
+
+ChatGPT:
+-------
+
+In this sequence diagram:
+
+1.The user sends a login request to the application.
+2.The application processes the login request and sends a login response back to the user.
+3.The user requests movie details from the application.
+4.The application retrieves the movie details from the database and sends them back to the user.
+5.The user likes or dislikes a movie.
+6.The user's action is sent to the application.
+7.The application updates the likes/dislikes for the movie in the database and sends an update response back to the user.
+8.The user adds a movie to the "watch later" list.
+9.The user's action is sent to the application.
+10.The application updates the user's "watch later" list in the database and sends an update response back to the user.
+Please note that this is a simplified representation, and there may be additional steps and interactions depending on the specific implementation of your application.
