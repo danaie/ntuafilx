@@ -1,14 +1,29 @@
 const express = require('express');
+const path = require('path');
 
 const uploadController = require('../controllers/upload');
 
 const router =express.Router();
+const multer = require('multer');
 
-router.post('/titlebasics', uploadController.postTitlebasics);
-router.post('/titleakas', uploadController.postTitleakas);
-router.post('/titlecrew', uploadController.postTitlecrew);
-router.post('/titleepisode', uploadController.postTitleepisode);
-router.post('/titleprincipals', uploadController.postTitleprincipals);
-router.post('/titleratings', uploadController.postTitleratings);
+let storage = multer.diskStorage({
+    destination:(req,res,callback) =>{
+        const routePath = req.route.path;
+        const lastPart = path.basename(routePath);
+        const destination = `./uploads/${lastPart}`;
+        callback(null, destination);
+    },
+    filename:(req,res,callback) =>{
+        callback(null,file.fieldname + "-" + Date.now() + path.extname(file.originalame));
+    }
+})
+const upload = multer({storage:storage});
+
+router.post('/titlebasics',upload.single('file'), uploadController.postTitlebasics);
+router.post('/titleakas',upload.single('file'), uploadController.postTitleakas);
+router.post('/titlecrew',upload.single('file'), uploadController.postTitlecrew);
+router.post('/titleepisode',upload.single('file'), uploadController.postTitleepisode);
+router.post('/titleprincipals',upload.single('file'), uploadController.postTitleprincipals);
+router.post('/titleratings',upload.single('file'), uploadController.postTitleratings);
 
 module.exports = router;

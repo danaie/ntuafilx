@@ -6,7 +6,6 @@ const cors = require('cors');
 const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
 
-
 const app = express();
 app.use(cors());
 
