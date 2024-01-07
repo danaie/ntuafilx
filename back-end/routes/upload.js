@@ -8,13 +8,16 @@ const multer = require('multer');
 
 let storage = multer.diskStorage({
     destination:(req,res,callback) =>{
+        
         const routePath = req.route.path;
         const lastPart = path.basename(routePath);
-        const destination = `./uploads/${lastPart}`;
+        const destination = __dirname+`/../uploads/${lastPart}`; 
         callback(null, destination);
+        
+       //callback(null,'../uploads');
     },
-    filename:(req,res,callback) =>{
-        callback(null,file.fieldname + "-" + Date.now() + path.extname(file.originalame));
+    filename:(req,file,callback) =>{
+        callback(null, Date.now() + '-' + file.originalname);
     }
 })
 const upload = multer({storage:storage});

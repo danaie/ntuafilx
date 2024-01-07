@@ -24,7 +24,8 @@ create table title (
     isAdult bool not null,
     startYear year not null,
     endYear year,
-    runtimeMinutes int not null
+    runtimeMinutes int not null,
+    image varchar(100)
 );
 
 create table watchlist (
