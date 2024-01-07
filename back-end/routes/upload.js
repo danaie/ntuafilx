@@ -28,5 +28,6 @@ router.post('/titlecrew',upload.single('file'), uploadController.postTitlecrew);
 router.post('/titleepisode',upload.single('file'), uploadController.postTitleepisode);
 router.post('/titleprincipals',upload.single('file'), uploadController.postTitleprincipals);
 router.post('/titleratings',upload.single('file'), uploadController.postTitleratings);
+router.post('/namebasics',upload.single('file'), uploadController.postNamebasics);
 
 module.exports = router;

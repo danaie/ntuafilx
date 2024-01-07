@@ -24,7 +24,8 @@ create table title (
     isAdult bool not null,
     startYear year not null,
     endYear year,
-    runtimeMinutes int not null,
+    runtimeMinutes int,
+    genres varchar(100),
     image varchar(100)
 );
 
@@ -38,20 +39,6 @@ create table watchlist (
         constraint unique (userID, titleID)
 );
 
-create table genres (
-	genresID varchar(10) primary key,
-    gernreName varchar(20) not null
-);
-
-create table title_gernes (
-	titleID varchar(10),
-    genresID varchar(10),
-    foreign key (titleID)
-		references title (titleID),
-	foreign key (genresID)
-		references genres (genresID),
-        constraint unique (titleID, genresID)
-);
 
 create table ratings (
 	titleID varchar(10),
@@ -65,16 +52,17 @@ create table tilteAKA (
 	titleID varchar(10),
     ordering int not null,
     title varchar(20) not null,
-    region varchar(20) not null,
-    language varchar(20) not null,
+    region varchar(20) ,
+    language varchar(20) ,
+    atributes varchar(100),
     isOriginal bool not null
 );
 
 create table episode (
 	episodeID varchar(10) primary key,
     titleID varchar(10),
-    season int not null,
-    episodeNumber int not null,
+    season int ,
+    episodeNumber int ,
     foreign key (titleID)
 		references title (titleID)
 );
@@ -84,37 +72,9 @@ create table nameBasics (
     primaryName varchar(20) not null,
     birthYear year not null,
     deathYear year,
-    primaryProfession varchar(20)
-);
-
-create table writers (
-	titleID varchar(10),
-    basicsID varchar(10),
-    foreign key (titleID)
-		references title (titleID),
-	foreign key (basicsID)
-		references nameBasics (basicsID),
-        constraint unique (titleID, basicsID) 
-);
-
-create table Directors (
-	titleID varchar(10),
-    basicsID varchar(10),
-    foreign key (titleID)
-		references title (titleID),
-	foreign key (basicsID)
-		references nameBasics (basicsID),
-        constraint unique (titleID, basicsID) 
-);
-
-create table KnownFor (
-	titleID varchar(10),
-    basicsID varchar(10),
-    foreign key (titleID)
-		references title (titleID),
-	foreign key (basicsID)
-		references nameBasics (basicsID),
-        constraint unique (titleID, basicsID) 
+    primaryProfession varchar(100),
+    knowForTitles varchar(100),
+    image varchar(100)
 );
 
 create table principals (
@@ -123,10 +83,24 @@ create table principals (
     basicsID varchar(10),
     category varchar(20) not null,
     job varchar(20),
-    characters varchar(20),
+    characters varchar(100),
     foreign key (titleID)
 		references title (titleID),
 	foreign key (basicsID)
 		references nameBasics (basicsID),
         constraint unique (titleID, basicsID) 
+);
+
+create table crew (
+	titleID varchar(10),
+    directors varchar(10),
+    writers varchar(10),
+    foreign key (titleID)
+		references title (titleID),
+	foreign key (directors)
+		references nameBasics (basicsID),
+        constraint unique (titleID, directors),
+        foreign key (writers)
+		references nameBasics (basicsID),
+        constraint unique (titleID, writers) 
 );

@@ -1,26 +1,24 @@
 const fs = require('fs');
-const csv = require('fast-csv');
+const tsv = require('fast-csv');
 const { pool } = require('../utils/database');
 
-function upload_csv(path){
+function upload_tsv(path,query){
     let stream = fs.createReadStream(path)
-    let csvDataColl = []
-    let fileStream = csv
-        .parse()
+    let tsvDataColl = []
+    let fileStream = tsv
+        .parse({ delimiter: '\t' })
         .on('data',function (data) {
             const row = data.map(value => (value.startsWith('\\') ? null : value));
-            csvDataColl.push(row)
+            tsvDataColl.push(row)
         })
         .on('end',function () {
-            //console.log(csvDataColl)
-            csvDataColl.shift();
+            tsvDataColl.shift();
             pool.getConnection((error,connection) =>{
                 if (error) {
                     console.log(error)
                 }
                 else {
-                    query = "insert into title (titleID, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes, image) values ?"
-                    connection.query(query,[csvDataColl],(error,res) =>{
+                    connection.query(query,[tsvDataColl],(error,res) =>{
                         console.log(error || res)
                         connection.release();
                     });
@@ -35,4 +33,4 @@ function upload_csv(path){
         stream.pipe(fileStream);
 }
 
-module.exports = upload_csv;
+module.exports = upload_tsv;
