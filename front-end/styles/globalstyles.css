@@ -1,0 +1,128 @@
+/*globalstyles.css*/
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.auth-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.auth-buttons .login-button {
+  margin-right: 10px;
+}
+
+.home-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 20px 0;
+  background-color: #E0DFDF;
+  font-family: 'Roboto', sans-serif;
+}
+
+.book-list {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.book-list li {
+  text-align: center;
+  width: 200px;
+  height: 320px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.book-list li:last-child {
+  margin-right: 0;
+}
+
+.book-list li h3 {
+  margin: 0;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.book-list li img {
+  width: 130px;
+}
+
+.container {
+  max-width: 400px;
+  margin: 10px;
+  padding: 0;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 2.5em;
+  color: #333;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+input {
+  padding: 12px;
+  width: 320px;
+  border: 2px solid #61006D;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.main-content {
+  text-align: center;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+button {
+  padding: 12px 20px;
+  cursor: pointer;
+  background-color: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.login-button {
+  padding: 12px 20px;
+  cursor: pointer;
+  background-color: #0F4C49;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
