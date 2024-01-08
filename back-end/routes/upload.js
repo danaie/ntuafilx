@@ -8,10 +8,7 @@ const multer = require('multer');
 
 let storage = multer.diskStorage({
     destination:(req,res,callback) =>{
-        
-        const routePath = req.route.path;
-        const lastPart = path.basename(routePath);
-        const destination = __dirname+`/../uploads/${lastPart}`; 
+        const destination = __dirname+'/../uploads'; 
         callback(null, destination);
         
        //callback(null,'../uploads');
