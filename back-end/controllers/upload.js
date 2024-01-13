@@ -1,5 +1,5 @@
 const fs = require('fs');
-const path = require('path')
+const path = require('path');
 
 const upload_csv = require('../middlewares/upload_csv')
 
@@ -17,8 +17,10 @@ exports.postTitlebasics = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query = "insert into title (titleID, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes,genres, image) values ?"
-    upload_csv(__dirname+'/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title basics file reseved' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    }); 
 }
 
 exports.postTitleakas = (req, res, next) => {
@@ -35,8 +37,10 @@ exports.postTitleakas = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query ="insert into titleAKA (titleID, ordering, title, region, language, types, atributes, isOriginal) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title akas' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 
 exports.postTitlecrew = (req, res, next) => {
@@ -53,8 +57,10 @@ exports.postTitlecrew = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query ="insert into crew (titleID, directors, writers) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title crew' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 
 exports.postTitleepisode = (req, res, next) => {
@@ -71,8 +77,10 @@ exports.postTitleepisode = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query ="insert into episode (episodeID, titleID, season, episodeNumber) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title episode' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 
 exports.postTitleprincipals = (req, res, next) => {
@@ -89,8 +97,10 @@ exports.postTitleprincipals = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query = "insert into principals (titleID, ordering, basicsID, category, job, characters, image) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title principals' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 
 exports.postTitleratings = (req, res, next) => {
@@ -107,8 +117,10 @@ exports.postTitleratings = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query = "insert into ratings (titleID, averageRating, numVotes) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Title ratings' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 
 exports.postNamebasics  = (req, res, next) => {
@@ -125,7 +137,9 @@ exports.postNamebasics  = (req, res, next) => {
         return res.status(400).send('File must be a tsv');
     }
     const query = "insert into nameBasics (basicsID, primaryName, birthYear, deathYear, primaryProfession, knowForTitles, image) values ?"
-    upload_csv(__dirname + '/../uploads/' + req.file.filename,query)
-    res.status(200).json({ message: 'POST Name basics' });
+    upload_csv(__dirname+'/../uploads/' + req.file.filename,query,(error) =>{
+        if (error) res.status(500).json({status:"failed", error:error});
+        else res.status(200).json({status:"OK", message:"Title Basics updated"});
+    });
 }
 

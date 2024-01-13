@@ -96,3 +96,46 @@ create table crew (
     directors varchar(100),
     writers varchar(100)
 );
+
+-- -----------------------------
+-- stored procedure 
+-- -----------------------------
+
+DELIMITER //
+CREATE PROCEDURE ClearAllTables()
+BEGIN
+    DECLARE done INT DEFAULT 0;
+    DECLARE tableName VARCHAR(255);
+
+    -- Cursor to iterate through tables
+    DECLARE tableCursor CURSOR FOR
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'imbd';
+
+    -- Declare continue handler to exit loop when no more tables are found
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    -- Open the cursor
+    OPEN tableCursor;
+    SET FOREIGN_KEY_CHECKS = 0;
+
+    -- Loop through all tables and truncate each one
+    tableLoop: LOOP
+        FETCH tableCursor INTO tableName;
+
+        IF done THEN
+            LEAVE tableLoop;
+        END IF;
+
+        SET @truncateQuery = CONCAT('TRUNCATE TABLE ', tableName);
+        PREPARE truncateStatement FROM @truncateQuery;
+        EXECUTE truncateStatement;
+        DEALLOCATE PREPARE truncateStatement;
+    END LOOP;
+	
+    SET FOREIGN_KEY_CHECKS = 1;
+    -- Close the cursor
+    CLOSE tableCursor;
+END //
+DELIMITER ;
