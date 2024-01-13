@@ -15,16 +15,22 @@ function upload_tsv(path, query, callback) {
             tsvDataColl.shift();
             pool.getConnection((error, connection) => {
                 if (error) {
-                    callback(error); // Pass the error to the callback
+                    callback(error); 
                 } else {
                     connection.query(query, [tsvDataColl], (error, res) => {
                         connection.release();
                         if (error) {
-                            callback(error); // Pass the error to the callback
-                        } else {
+                            callback(error); 
                             fs.unlink(path, (err) => {
                                 if (err) {
-                                    callback(err); // Pass the error to the callback
+                                    console.error(err);
+                                }
+                            });
+                        } else {
+                            console.log(res||error)
+                            fs.unlink(path, (err) => {
+                                if (err) {
+                                    callback(err); 
                                 } else {
                                     callback(null, res); // Signal successful completion
                                 }
