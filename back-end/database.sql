@@ -92,7 +92,7 @@ create table principals (
 );
 
 create table crew (
-	titleID varchar(10),
+	titleID varchar(10) primary key,
     directors varchar(100),
     writers varchar(100)
 );
