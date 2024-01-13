@@ -10,8 +10,6 @@ let storage = multer.diskStorage({
     destination:(req,res,callback) =>{
         const destination = __dirname+'/../uploads'; 
         callback(null, destination);
-        
-       //callback(null,'../uploads');
     },
     filename:(req,file,callback) =>{
         callback(null, Date.now() + '-' + file.originalname);

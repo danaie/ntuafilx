@@ -48,12 +48,13 @@ create table ratings (
 		references title (titleID)
 );
 
-create table tilteAKA (
+create table titleAKA (
 	titleID varchar(10),
     ordering int not null,
-    title varchar(100) not null,
+    title varchar(150) not null,
     region varchar(100) ,
     language varchar(100) ,
+    types varchar(100) ,
     atributes varchar(100),
     isOriginal bool not null
 );
@@ -62,9 +63,7 @@ create table episode (
 	episodeID varchar(10) primary key,
     titleID varchar(10),
     season int ,
-    episodeNumber int ,
-    foreign key (titleID)
-		references title (titleID)
+    episodeNumber int 
 );
 
 create table nameBasics (
@@ -84,6 +83,7 @@ create table principals (
     category varchar(100) not null,
     job varchar(100),
     characters varchar(100),
+    image varchar(100),
     foreign key (titleID)
 		references title (titleID),
 	foreign key (basicsID)
@@ -94,13 +94,5 @@ create table principals (
 create table crew (
 	titleID varchar(10),
     directors varchar(100),
-    writers varchar(100),
-    foreign key (titleID)
-		references title (titleID),
-	foreign key (directors)
-		references nameBasics (basicsID),
-        constraint unique (titleID, directors),
-        foreign key (writers)
-		references nameBasics (basicsID),
-        constraint unique (titleID, writers) 
+    writers varchar(100)
 );
