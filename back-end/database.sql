@@ -3,18 +3,18 @@
 -- ---------------
 create database imbd;
 use imbd;
- 
+
 -- drop database imbd;
 
 -- --------------
 -- Create Tables
 -- --------------
 create table user (
-	userID varchar(10) primary key,
+	userID int auto_increment primary key,
     username varchar(15) not null unique,
-    password varchar(20) not null,
-    isAdmin bool
-);
+    password varchar(200) not null,
+    isAdmin bool default false
+) auto_increment=1;
 
 create table title (
 	titleID varchar(10) primary key,
@@ -30,7 +30,7 @@ create table title (
 );
 
 create table watchlist (
-	userID varchar(10),
+	userID int,
     titleID varchar(10),
     foreign key (userID)
 		references user (userID),
