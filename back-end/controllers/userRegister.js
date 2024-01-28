@@ -34,4 +34,4 @@ exports.createUserHandler = (req, res) => {
             data: results
         });
     });
-};
+}; 
