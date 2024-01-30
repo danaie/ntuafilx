@@ -4,6 +4,7 @@ const { program } = require('commander');
 const fs = require('fs');
 const axios = require('axios');
 var FormData = require('form-data');
+const https = require('https');
 
 const base_url = 'http://localhost:9876/ntuaflix_api'
 
@@ -19,10 +20,16 @@ program
     .alias('hc')
     .description('Perform a health check to database / server')
     .action(() => {
-        axios
-            .get(base_url+'/admin/healthcheck')
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err.message))
+      var config = {
+        method: 'get',
+        url: base_url+'/admin/healthcheck',
+        headers: {
+          'requested-by-cli':'autheinaimiapolhmystikhtimhpoyksereimonotocli'
+      },
+      };
+      axios(config)
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err.message))
     });
 
 program 
@@ -30,10 +37,16 @@ program
     .alias('r')
     .description('Reset database')
     .action(() => {
-        axios
-            .post(base_url+'/admin/resetall')
-            .then((res) => console.log(res.data))
-            .catch((err) => console.log(err.message))
+      var config = {
+        method: 'post',
+        url: base_url+'/admin/resetall',
+        headers: {
+          'requested-by-cli':'autheinaimiapolhmystikhtimhpoyksereimonotocli'
+      },
+      };
+      axios(config)
+          .then((res) => console.log(res.data))
+          .catch((err) => console.log(err.message))
     });   
 
 program

@@ -7,7 +7,8 @@ function post_file(path,file) {
     }
     const config = {
     headers: {
-        'Content-Type': 'multipart/form-data'
+        'Content-Type': 'multipart/form-data',
+        'requested-by-cli':'autheinaimiapolhmystikhtimhpoyksereimonotocli'
             }
         };
     axios
