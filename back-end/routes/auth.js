@@ -6,6 +6,7 @@ const router =express.Router();
 
 router.post('/usermod/:username/:password', auth.createUser);
 router.post('/login',auth.login);
+router.get('/logout',auth.logout);
 router.post('/admin/usermod/:username/:password',auth.createAdmin);
 
 module.exports = router;

@@ -102,4 +102,9 @@ exports.login = (req,res,next) => {
             });
         }
     });
+};
+
+exports.logout = (req,res,next) => {
+    res.cookie('X-OBSERVATORY-AUTH','', {maxAge: 1});
+    res.status(200).json({status:'OK',message:'Logout successful'})
 }
