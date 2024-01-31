@@ -4,15 +4,28 @@
 
 // components/HomeLoggedIn.js
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { FaUser } from 'react-icons/fa';
-import '../styles/globalstyles.css'; // Assuming Tailwind CSS is included here
+import axios from 'axios'; // for API requests
+import '../styles/globalstyles.css'; 
 
 const HomeLoggedIn = () => {
   const [loggedIn, setLoggedIn] = useState(true);
+  const [username, setUsername] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    //API call for username 
+    axios.get('/api/getUsername') // Replace with actual API endpoint for username
+      .then(response => {
+        setUsername(response.data.username);
+      })
+      .catch(error => {
+        console.error('Error fetching username:', error);
+      });
+  }, []); 
 
   const handleLogout = () => {
     // Placeholder for logout functionality
@@ -34,14 +47,8 @@ const HomeLoggedIn = () => {
           <button className="btn btn-primary">Search</button>
         </div>
         <div className="user-actions" style={{ display: 'flex', alignItems: 'center' }}>
-          {/* Add components or links specific to logged-in users */}
-          <Link href="/profile" style={{ textDecoration: 'none', marginRight: '10px' }}>
-            <button
-              className="btn btn-secondary profile-button" // Added a specific class for the profile button
-            >
-              <FaUser style={{ marginRight: '5px' }} /> Profile
-            </button>
-          </Link>
+          {/* Display the username instead of "Profile" */}
+          <span style={{ marginRight: '10px', fontWeight: 'bold' }}>{username}</span>
           <button className="btn btn-primary" onClick={handleLogout}>
             Logout
           </button>
