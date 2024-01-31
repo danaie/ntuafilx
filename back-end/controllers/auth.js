@@ -47,7 +47,7 @@ exports.createAdmin = (req,res,next) => {
             const query = 'insert into user (username, password, isAdmin) values (?,?,true)';
             pool.getConnection((err,connection) => {
                 if (err) {
-                    console.log(error)
+                    console.log(err)
                     return res.status(500).json({ error: err});
                 }
                 else {
@@ -71,6 +71,8 @@ exports.createAdmin = (req,res,next) => {
 exports.login = (req,res,next) => {
     const req_username = req.body.username;
     const req_password = req.body.password;
+    if (!req_password || !req_username)
+        return res.status(400).json({ error: 'Username and password are required'});
     const query = 'select * from user where username = ?';
     pool.getConnection((err,connection) => {
         if (err) {
@@ -107,4 +109,29 @@ exports.login = (req,res,next) => {
 exports.logout = (req,res,next) => {
     res.cookie('X-OBSERVATORY-AUTH','', {maxAge: 1});
     res.status(200).json({status:'OK',message:'Logout successful'})
+}
+
+exports.viewUser = (req,res,next) => {
+    const username = req.params.username;
+    const query = 'select * from user where username = ?';
+    pool.getConnection((err,connection) => {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ error: err});
+        }
+        else {
+            connection.query(query, username, (error,result) => {
+                connection.release();
+                //console.log(result);
+                if (error) {
+                    console.log(error)
+                    return res.status(500).json({ error: error});
+                };
+                if (result.length == 0)
+                    return res.status(400).json({error:"No user with this username"})
+                else
+                    return res.status(200).json(result[0]);
+                });
+        }
+    });
 }
