@@ -9,6 +9,7 @@ const https = require('https');
 const base_url = 'http://localhost:9876/ntuaflix_api';
 
 const post_file = require('./postfile.js');
+const token_path = __dirname+'/.token'
 
 program
     .version('1.0.0')
@@ -24,12 +25,16 @@ program
         method: 'get',
         url: base_url+'/admin/healthcheck',
         headers: {
-          'requested-by-cli': fs.readFileSync(".token", "utf8")
+          'requested-by-cli': fs.readFileSync(token_path, "utf8")
       },
       };
       axios(config)
           .then((res) => console.log(res.data))
-          .catch((err) => console.log(err.message))
+          .catch((err) => {
+            console.log(err.message)
+            if(err.response != undefined)
+              console.log(err.response.data.error)  
+          })
     });
 
 program 
@@ -41,7 +46,7 @@ program
         method: 'post',
         url: base_url+'/admin/resetall',
         headers: {
-          'requested-by-cli': fs.readFileSync(".token", "utf8")
+          'requested-by-cli': fs.readFileSync(token_path, "utf8")
       },
       };
       axios(config)
@@ -162,7 +167,7 @@ program
             console.error(err);
             return;
           }
-          //console.log(fs.readFileSync(".token", "utf8"));
+          //console.log(fs.readFileSync(token_path, "utf8"));
           console.log('Login Succseful')
         });
       })
@@ -182,7 +187,7 @@ program
         return;
       }
       console.log('Logout succseful')
-      //console.log(fs.readFileSync(".token", "utf8"));
+      //console.log(fs.readFileSync(token_path, "utf8"));
     });
   });
 
@@ -199,7 +204,7 @@ program
       method: 'get',
       url: base_url+`/admin/users/${options.username}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(".token", "utf8")
+        'requested-by-cli': fs.readFileSync(token_path, "utf8")
     },
     };
     axios(config)
@@ -225,7 +230,7 @@ program
       method: 'post',
       url: base_url+`/admin/usermod/${options.username}/${options.passw}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(".token", "utf8")
+        'requested-by-cli': fs.readFileSync(token_path, "utf8")
     },
     };
     axios(config)
