@@ -8,6 +8,7 @@
     "se2314": "server.js"
   },
   "scripts": {
+    "dev": "next dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
