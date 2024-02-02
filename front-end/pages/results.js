@@ -1,7 +1,6 @@
 // pages/results.js
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import React, { useState } from 'react';
 import { fetchData } from './api';
 import React, { useState, useEffect } from 'react';
 import '../styles/globalstyles.css';
@@ -15,25 +14,29 @@ const ResultsPage = () => {
   const [actorresult, setActorresultinfo] = useState([]);
   const [topratedmoviesofactor, setTopRatedMoviesOfActor] = useState([]);
   const [mostrecentmoviesofactor, setmostrecentmovies] = useState([]);
-
-  if (!searchResults) {
-    return <div>No search results found.</div>;
-  }
+  const [searchCategory, setSearchCategory] = useState(''); 
+  
+  const categoryRoutes = {
+    title: '/searchtitle',
+    actor: '/searchname',
+    genre: '/searchgenre',
+    releaseYear: '/searchrelyear',
+  };
 
   useEffect(() => {
     const fetchDataForResultPage = async () => {
       try {
-        const apiRoute = getApiRoute(searchResults);
+        const apiRoute = getApiRoute(searchCategory); // Use searchCategory instead of searchResults
+  
         const response = await fetchData(apiRoute, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ query: searchTerm }),
         });
-
+  
         const data = await response.json();
-
+  
         if (searchCategory === 'actor') {
           fetchactorresult();
           fetchtopratedmoviesofactor();
@@ -48,10 +51,11 @@ const ResultsPage = () => {
         console.error(`Error fetching data for ${searchCategory}:`, error);
       }
     };
-    if (searchResults) {
+  
+    if (searchCategory) {
       fetchDataForResultPage();
     }
-  }, [searchResults, searchTitle]);
+  }, [searchCategory]);
 
   const fetchTopRatedMovies = async () => {
     try {
@@ -123,20 +127,23 @@ const ResultsPage = () => {
 
   const handleSearch = async (event) => {
     event.preventDefault();
-
+  
     try {
       const apiRoute = getApiRoute(searchCategory);
-
+  
       const response = await fetchData(apiRoute, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ query: searchTerm }), // Remove this line for GET, but if post to ksanavlepw
+        body: JSON.stringify({
+          titlePart: searchCategory === 'title' ? searchTerm : '', // Include titlePart only for title search
+          namePart: searchCategory === 'actor' ? searchTerm : '', // Include namePart only for actor search
+        }),
       });
-
+  
       const data = await response.json();
-
+  
       if (searchCategory === 'actor') {
         fetchactorresult();
         fetchtopratedmoviesofactor();
@@ -144,13 +151,13 @@ const ResultsPage = () => {
       } else if (searchCategory === 'genre') {
         fetchTopRatedMovies(data);
       }
-
+  
       fetchPosters(data);
       setResultsWithPosters(data);
-
+  
       router.push({
         pathname: '/results',
-        query: { searchResults: data }, // Consider passing specific properties instead of the entire object
+        query: { searchResults: data, searchCategory }, // Pass searchCategory in the query
       });
     } catch (error) {
       console.error(`Error searching for ${searchCategory}s:`, error);
@@ -160,7 +167,7 @@ const ResultsPage = () => {
   const getApiRoute = (searchCategory) => {
     const categoryRoutes = {
       title: '/searchtitle',
-      actor: '/searchactor',
+      actor: '/searchname',
       genre: '/searchgenre',
       releaseYear: '/searchrelyear',
     };
@@ -181,7 +188,7 @@ const ResultsPage = () => {
 
   const fetchPoster = async (titleID) => {
     try {
-      const response = await fetch(`/title/${titleID}`, {
+      const response = await fetchData(`/title/${titleID}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -229,12 +236,12 @@ const ResultsPage = () => {
           <li key={index}>
             <h3>{item.title}</h3>
             <img src={item.titlePoster} alt={item.title} />
-            <Link to={{ pathname: '/movie-details', state: { movie: item } }}> Show Movie Details </Link>
+            <Link href="/movie-details/[titleID]" as={`/movie-details/${item.titleID}`}> Show Movie Details </Link>
           </li>
           </div>
         ))}
       </ul>
-      {searchResults == categoryRoutes['genre'] && (
+      {searchCategory === categoryRoutes['genre'] && (
         <div className="top-rated-movies">
           <h2>Top 10 Rated Movies</h2>
           <ul className="book-list">
@@ -243,14 +250,14 @@ const ResultsPage = () => {
                   <div className="container" key={index}>
                   <h3>{item.title}</h3>
                   <img src= {item.titlePoster} alt={item.title} />
-                  <Link to={{ pathname: '/movie-details', state: { movie: item } }}> Show Movie Details </Link>
+                  <Link href="/movie-details" style={{ textDecoration: 'none' }}> Show Movie Details </Link>
                   </div>
                 </li>
             ))}
           </ul>
         </div>
       )}
-      {searchResults == categoryRoutes['actor'] && (
+      {searchCategory == categoryRoutes['actor'] && (
         <ul classname= "book-list">
         {actorresult.map ((item, index) => (
           <li>
@@ -266,7 +273,7 @@ const ResultsPage = () => {
                   <div className="container" key={index}>
                   <h3>{item.title}</h3>
                   <img src= {item.titlePoster} alt={item.title} />
-                  <Link to={{ pathname: '/movie-details', state: { movie: item } }}> Show Movie Details </Link>
+                  <Link href="/movie-details" style={{ textDecoration: 'none' }}>Show Movie Details </Link>
                   </div>
                 </li>
             ))}
@@ -277,7 +284,7 @@ const ResultsPage = () => {
                   <div className="container" key={index}>
                   <h3>{item.title}</h3>
                   <img src= {item.titlePoster} alt={item.title} />
-                  <Link to={{ pathname: '/movie-details', state: { movie: item } }}> Show Movie Details </Link>
+                  <Link href="/movie-details" style={{ textDecoration: 'none' }}> Show Movie Details </Link>
                   </div>
                 </li>
             ))}
