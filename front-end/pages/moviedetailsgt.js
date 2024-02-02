@@ -1,8 +1,3 @@
-
-//search: 
-// http://localhost:3000/homepagewhenloggedin
-
-
 // Import necessary modules
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
@@ -11,14 +6,14 @@ import { FaUser, FaSearch } from 'react-icons/fa';
 import axios from 'axios'; // Api requests
 import '../styles/globalstyles.css';
 
-// HomeLoggedIn component
-const HomeLoggedIn = () => {
+// MovieDetails component
+const MovieDetailsGT = () => {
   const [loggedIn, setLoggedIn] = useState(true);
   const [username, setUsername] = useState('');
-  const [movies, setMovies] = useState([]);
+  const [movieDetails, setMovieDetails] = useState(null);
   const router = useRouter();
 
-  // Fetch username and movies on component mount
+  // Fetch username on component mount
   useEffect(() => {
     // API call for username
     axios.get('/api/getUsername')
@@ -29,16 +24,20 @@ const HomeLoggedIn = () => {
         console.error('Error fetching username:', error);
       });
 
-    // API call to fetch movies
-    axios.get('http://localhost:9876/ntuaflix_api/titles')
-      .then(response => {
-        setMovies(response.data.data); // Assuming the response is an array of movies
-        console.log('Movies:', response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching movies:', error);
-      });
-  }, []);
+    // Fetch movie details based on router query (assuming titleID is passed in the query)
+    const { titleID } = router.query;
+    if (titleID) {
+      // API call to fetch movie details
+      axios.get(`http://localhost:9876/ntuaflix_api/title/${titleID}`)
+        .then(response => {
+          setMovieDetails(response.data); // Assuming the response is the movie details
+          console.log('Movie Details:', response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching movie details:', error);
+        });
+    }
+  }, [router.query]);
 
   // Logout functionality
   const handleLogout = () => {
@@ -76,36 +75,19 @@ const HomeLoggedIn = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
-      <div className="nav-links" style={{ padding: '1rem', backgroundColor: '#ffffff' }}>
-        <Link href="/watchlist" as="/watchlist" style={{ textDecoration: 'none', marginBottom: '1rem', display: 'block' }}>
-          <span className="nav-link">Watchlist</span>
-        </Link>
-        <Link href="/liked_movies" as="/liked_movies" style={{ textDecoration: 'none', display: 'block' }}>
-          <span className="nav-link">Liked Movies</span>
-        </Link>
-      </div>
-
-      {/* Main Content Section*/}
-      <div className="main-content">
-        <h2>Movies from Backend</h2>
-        {movies && movies.length > 0 ? (
-          <ul>
-            {movies.map(movie => (
-              <li key={movie.id}>
-                <Link href="/moviedetailsgt/[titleID]" as={`/moviedetailsgt/${encodeURIComponent(movie.id)}`}>
-                  <div>{movie.originalTitle}</div>
-                </Link>
-              </li>
-            ))}
-          </ul>
+      {/* Movie Details Section */}
+      <div className="movie-details">
+        {movieDetails ? (
+          <>
+            <h2>{movieDetails.originalTitle}</h2>
+            {/* Display other movie details here */}
+          </>
         ) : (
-          <p>No movies available</p>
+          <p>Loading movie details...</p>
         )}
       </div>
     </div>
   );
 };
 
-export default HomeLoggedIn;
-
+export default MovieDetailsGT;

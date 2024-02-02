@@ -2,7 +2,7 @@
 diladi otan exoume ta results kapou kai dialeksoume na emfanistoun ta movie details tis ekastote tainias*/
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+//import { useParams } from 'react-router-dom';
 import { fetchData } from './api.js';
 import '../styles/globalstyles.css';
 import Link from 'next/link';
