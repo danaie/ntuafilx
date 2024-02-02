@@ -179,7 +179,7 @@ exports.getNameById = (req, res) => {
             } else if (results.length === 0) {
                 reject(`Movie not found with ${titleID}`);
             } else {
-                resolve(results[0]);
+                resolve(results);
             }
         });
     });
