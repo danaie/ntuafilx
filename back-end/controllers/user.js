@@ -165,7 +165,7 @@ exports.getNameById = (req, res) => {
                 console.error('Error executing SELECT query:', error);
                 reject('Database error');
             } else if (results.length === 0) {
-                reject(`Movie not found with ${titleID}`);
+                reject(`Name not found with ${nameID}`);
             } else {
                 resolve(results[0]);
             }
@@ -177,7 +177,7 @@ exports.getNameById = (req, res) => {
                 console.error('Error executing SELECT query:', error);
                 reject('Database error');
             } else if (results.length === 0) {
-                reject(`Movie not found with ${titleID}`);
+                reject(`Movie not found with ${nameID}`);
             } else {
                 resolve(results);
             }
