@@ -21,14 +21,19 @@ program
     .alias('hc')
     .description('Perform a health check to database / server')
     .action(() => {
+<<<<<<< HEAD
+=======
+      const token = fs.readFileSync(token_path, "utf8");
+>>>>>>> 6dd0cb0 (cli)
       console.log(fs.readFileSync(token_path, "utf8"));
       var config = {
         method: 'get',
         url: base_url+'/admin/healthcheck',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
-      },
+          'X-OBSERVATORY-AUTH': token
+        }
       };
+      console.log(token);
       axios(config)
           .then((res) => console.log(res.data))
           .catch((err) => {
@@ -47,7 +52,7 @@ program
         method: 'post',
         url: base_url+'/admin/resetall',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
+          'X-OBSERVATORY-AUTH': fs.readFileSync(token_path, "utf8")
       },
       };
       axios(config)
@@ -205,7 +210,7 @@ program
       method: 'get',
       url: base_url+`/admin/users/${options.username}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': fs.readFileSync(token_path, "utf8")
     },
     };
     axios(config)
@@ -231,7 +236,7 @@ program
       method: 'post',
       url: base_url+`/admin/usermod/${options.username}/${options.passw}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': fs.readFileSync(token_path, "utf8")
     },
     };
     axios(config)
