@@ -39,7 +39,7 @@ const Signup = () => {
   return (
     <div className="home-container">
       <div className="header">
-        <Link href="/searchresults" style={{ textDecoration: 'none' }}>
+        <Link href="/homepage" style={{ textDecoration: 'none' }}>
         <h1 className="title">Ntuaflix</h1>
         </Link>
         <div className="search-bar">
