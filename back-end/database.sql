@@ -14,7 +14,7 @@ create table user (
     username varchar(15) not null unique,
     password varchar(200) not null,
     isAdmin bool default false
-) auto_increment=1;
+) auto_increment = 1;
 
 create table title (
 	titleID varchar(10) primary key,
@@ -96,6 +96,16 @@ create table crew (
     directors varchar(100),
     writers varchar(100)
 );
+
+-- ------------------------
+-- -- VIEWS FOR titleObject
+-- ------------------------
+
+-- principals list view
+CREATE VIEW principalsList AS
+SELECT titleID, principals.basicsID, nameBasics.primaryName, principals.category
+FROM principals
+JOIN nameBasics ON principals.basicsID = nameBasics.basicsID;
 
 -- -----------------------------
 -- stored procedure 
