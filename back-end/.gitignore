@@ -2,3 +2,4 @@ node_modules
 setup_database.sh
 .env
 query_test.sql
+querys.sql

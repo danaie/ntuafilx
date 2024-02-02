@@ -4,15 +4,27 @@
 
 
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { FaUser, FaSearch } from 'react-icons/fa'; // Import FaSearch icon
-import '../styles/globalstyles.css'; // Assuming Tailwind CSS is included here
+import { FaUser, FaSearch } from 'react-icons/fa';
+import axios from 'axios';
+import '../styles/globalstyles.css';
 
-const liked_movies = () => {
+const LikedMovies = () => {
   const [loggedIn, setLoggedIn] = useState(true);
+  const [likedMovies, setLikedMovies] = useState([]);
   const router = useRouter();
+
+  useEffect(() => {
+    // Fetch liked movies data from the backend
+    axios.get('/api/likedmovies') // Replace with the actual API endpoint for liked movies
+      .then(response => {
+        setLikedMovies(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching liked movies:', error);
+      });
+  }, []);
 
   const handleLogout = () => {
     // Placeholder for logout functionality
@@ -50,10 +62,19 @@ const liked_movies = () => {
         </div>
       </div>
       <div className="main-content">
-        {/* Other main content for logged-in users goes here */}
+        <h2>Liked Movies</h2>
+        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          {likedMovies.map(movie => (
+            <div key={movie.titleID} style={{ marginRight: '10px', marginBottom: '20px' }}>
+              <img src={movie.image} alt={movie.primaryTitle} style={{ width: '150px', height: '200px' }} />
+              <p>{movie.primaryTitle}</p>
+            </div>
+          ))}
+        </div>
+        {likedMovies.length === 0 && <p>No liked movies.</p>}
       </div>
     </div>
   );
 };
 
-export default liked_movies;
+export default LikedMovies;

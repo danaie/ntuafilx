@@ -8,7 +8,7 @@ function post_file(path,file) {
     const config = {
     headers: {
         'Content-Type': 'multipart/form-data',
-        'requested-by-cli':'autheinaimiapolhmystikhtimhpoyksereimonotocli'
+        'requested-by-cli': fs.readFileSync(".token", "utf8")
             }
         };
     axios

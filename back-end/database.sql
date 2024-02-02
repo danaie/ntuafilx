@@ -97,6 +97,16 @@ create table crew (
     writers varchar(100)
 );
 
+-- ------------------------
+-- -- VIEWS FOR titleObject
+-- ------------------------
+
+-- principals list view
+CREATE VIEW principalsList AS
+SELECT titleID, principals.basicsID, nameBasics.primaryName, principals.category
+FROM principals
+JOIN nameBasics ON principals.basicsID = nameBasics.basicsID;
+
 -- -----------------------------
 -- stored procedure 
 -- -----------------------------
