@@ -5,11 +5,12 @@ const fs = require('fs');
 const axios = require('axios');
 var FormData = require('form-data');
 const https = require('https');
+require('dotenv').config();
 
 const base_url = 'http://localhost:9876/ntuaflix_api';
 
 const post_file = require('./postfile.js');
-const token_path = __dirname+'/.token'
+const token_path = __dirname+'/.env'
 
 program
     .version('1.0.0')
@@ -21,12 +22,11 @@ program
     .alias('hc')
     .description('Perform a health check to database / server')
     .action(() => {
-      console.log(fs.readFileSync(token_path, "utf8"));
       var config = {
         method: 'get',
         url: base_url+'/admin/healthcheck',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
+          'X-OBSERVATORY-AUTH': process.env.TOKEN
       },
       };
       axios(config)
@@ -47,7 +47,7 @@ program
         method: 'post',
         url: base_url+'/admin/resetall',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
+          'X-OBSERVATORY-AUTH': process.env.TOKEN
       },
       };
       axios(config)
@@ -163,7 +163,7 @@ program
     axios
       .post(base_url+'/login',credentials)
       .then((res) => {
-        fs.writeFile('.token', res.data.token, (err) => {
+        fs.writeFile(token_path, 'TOKEN='+res.data.token, (err) => {
           if (err) {
             console.error(err);
             return;
@@ -182,7 +182,7 @@ program
 program
   .command('logout')
   .action(() => {
-    fs.writeFile('.token', '', (err) => {
+    fs.writeFile(token_path, '', (err) => {
       if (err) {
         console.error(err);
         return;
@@ -205,7 +205,7 @@ program
       method: 'get',
       url: base_url+`/admin/users/${options.username}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': process.env.TOKEN
     },
     };
     axios(config)
@@ -231,7 +231,7 @@ program
       method: 'post',
       url: base_url+`/admin/usermod/${options.username}/${options.passw}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': process.env.TOKEN
     },
     };
     axios(config)
