@@ -25,15 +25,25 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/searchresults": [
+    "/homepage": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/searchresults.js"
+      "static/chunks/pages/homepage.js"
     ],
-    "/signup2": [
+    "/login": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/signup2.js"
+      "static/chunks/pages/login.js"
+    ],
+    "/results": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/results.js"
+    ],
+    "/signup": [
+      "static/chunks/webpack.js",
+      "static/chunks/main.js",
+      "static/chunks/pages/signup.js"
     ]
   },
   "ampFirstPages": []

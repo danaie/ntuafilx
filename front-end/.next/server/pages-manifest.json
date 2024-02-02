@@ -2,7 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/signup2": "pages/signup2.js",
-  "/signup": "pages/signup.js",
-  "/searchresults": "pages/searchresults.js"
+  "/homepage": "pages/homepage.js",
+  "/results": "pages/results.js",
+  "/login": "pages/login.js",
+  "/signup": "pages/signup.js"
 }
