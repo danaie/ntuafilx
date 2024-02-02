@@ -5,7 +5,7 @@ const {secret_key} = require('./createjwt');
 exports.authAdmin = (req,res,next) => { 
     var token = req.cookies['X-OBSERVATORY-AUTH'];
     if (!token)
-        token = req.header('requested-by-cli')
+        token = req.header('X-OBSERVATORY-AUTH')
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
             if (err || decoded.isAdmin == 0){

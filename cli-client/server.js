@@ -5,11 +5,12 @@ const fs = require('fs');
 const axios = require('axios');
 var FormData = require('form-data');
 const https = require('https');
+require('dotenv').config();
 
 const base_url = 'http://localhost:9876/ntuaflix_api';
 
 const post_file = require('./postfile.js');
-const token_path = __dirname+'/.token'
+const token_path = __dirname+'/.env'
 
 program
     .version('1.0.0')
@@ -25,7 +26,7 @@ program
         method: 'get',
         url: base_url+'/admin/healthcheck',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
+          'X-OBSERVATORY-AUTH': process.env.TOKEN
       },
       };
       axios(config)
@@ -46,7 +47,7 @@ program
         method: 'post',
         url: base_url+'/admin/resetall',
         headers: {
-          'requested-by-cli': fs.readFileSync(token_path, "utf8")
+          'X-OBSERVATORY-AUTH': process.env.TOKEN
       },
       };
       axios(config)
@@ -162,7 +163,7 @@ program
     axios
       .post(base_url+'/login',credentials)
       .then((res) => {
-        fs.writeFile('.token', res.data.token, (err) => {
+        fs.writeFile(token_path, 'TOKEN='+res.data.token, (err) => {
           if (err) {
             console.error(err);
             return;
@@ -181,7 +182,7 @@ program
 program
   .command('logout')
   .action(() => {
-    fs.writeFile('.token', '', (err) => {
+    fs.writeFile(token_path, '', (err) => {
       if (err) {
         console.error(err);
         return;
@@ -204,7 +205,7 @@ program
       method: 'get',
       url: base_url+`/admin/users/${options.username}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': process.env.TOKEN
     },
     };
     axios(config)
@@ -230,7 +231,7 @@ program
       method: 'post',
       url: base_url+`/admin/usermod/${options.username}/${options.passw}`,
       headers: {
-        'requested-by-cli': fs.readFileSync(token_path, "utf8")
+        'X-OBSERVATORY-AUTH': process.env.TOKEN
     },
     };
     axios(config)
@@ -241,5 +242,97 @@ program
         console.log(err.response.data.error)  
       })
   });
+
+  program
+  .command('title')
+  .description('Returns info of the title with the given titleID')
+  .requiredOption('-t, --titleID <titleID>', 'Title ID to fetch information for')
+  .action(async (options) => {
+    const titleID = options.titleID;
+    try {
+      const response = await axios.get(base_url+`/title/${titleID}`);
+      console.log('Title information:', response.data);
+    } catch (error) {
+      console.error('Error fetching title information:', error.message);
+    }
+  });
+
+  program
+  .command('searchtitle')
+  .description('Returns the title given a title part')
+  .requiredOption('-tp, --titlepart <titlepart>', 'Title part to search titles')
+  .action(async (options) => {
+    const titlepart = options.titlepart;
+    try {
+      const response = await axios.get(`${base_url}/searchtitle`, {
+        params: {
+          titlePart: titlepart,
+        },
+      });
+      console.log('Search Results:', response.data);
+    } catch (error) {
+      console.error('Error fetching title information:', error.message);
+    }
+  });
+
+  program
+  .command('bygenre')
+  .description('Returns titles by genre')
+  .requiredOption('-g, --qgenre <genre>', 'Genre')
+  .requiredOption('-mr, --min <min>', 'Minimum Rating')
+  .option('-fy, --from <from>', 'From Year')
+  .option('-ty, --to <to>', 'To Year')
+  .action(async (options) => {
+    const qgenre = options.qgenre;
+    const min = options.min;
+    const from = options.from;
+    const to = options.to;
+    try {
+      const response = await axios.get(`${base_url}/bygenre`, {
+        params: {
+          qgenre : qgenre,
+          minrating : min,
+          yrFrom : from,
+          toyrTo : to
+        },
+      });
+      console.log('Search Results:', response.data);
+    } catch (error) {
+      console.error('Error fetching title information:', error.message);
+    }
+  });
+
+  program
+  .command('name')
+  .description('Returns info of the name with the given nameID')
+  .requiredOption('-n, --nameID <nameID>', 'Name ID to fetch information for')
+  .action(async (options) => {
+    const nameID = options.nameID;
+    try {
+      const response = await axios.get(base_url+`/name/${nameID}`);
+      console.log('Name information:', response.data);
+    } catch (error) {
+      console.error('Error fetching title information:', error.message);
+    }
+  });
+
+  program
+  .command('searchname')
+  .description('Returns the name given a name part')
+  .requiredOption('-np, --namepart <namepart>', 'Name part to search names')
+  .action(async (options) => {
+    const namepart = options.namepart;
+    try {
+      const response = await axios.get(`${base_url}/searchname`, {
+        params: {
+          namePart: namepart,
+        },
+      });
+      console.log('Search Results:', response.data);
+    } catch (error) {
+      console.error('Error fetching name information:', error.message);
+    }
+  });
+
 
 program.parse(process.argv)
