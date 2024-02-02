@@ -2,8 +2,12 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+<<<<<<< HEAD
   "/homepage": "pages/homepage.js",
   "/results": "pages/results.js",
   "/login": "pages/login.js",
   "/signup": "pages/signup.js"
+=======
+  "/homepage": "pages/homepage.js"
+>>>>>>> 0feffd2902e506454e4b9279436737e550b4027b
 }

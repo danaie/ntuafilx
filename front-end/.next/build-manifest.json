@@ -29,6 +29,7 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/homepage.js"
+<<<<<<< HEAD
     ],
     "/login": [
       "static/chunks/webpack.js",
@@ -44,6 +45,8 @@
       "static/chunks/webpack.js",
       "static/chunks/main.js",
       "static/chunks/pages/signup.js"
+=======
+>>>>>>> 0feffd2902e506454e4b9279436737e550b4027b
     ]
   },
   "ampFirstPages": []
