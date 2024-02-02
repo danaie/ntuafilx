@@ -25,3 +25,20 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* gt add */
+
+.profile-button {
+  background-color: #87CEEB; 
+  color: #fff; 
+}
+
+.profile-button:hover {
+  background-color: #007bb5; 
+}
