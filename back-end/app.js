@@ -19,8 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded( {extended: true }));
 app.use(cookieParser());
 //app.use(jsonToCsvMiddleware);
-app.use(()=>{
-    console.log("Requesting backend...")
+app.use((req,res,next)=>{
+    console.log("Requesting backend...");
+    next();
 });
 
 const base_url = '/ntuaflix_api'
