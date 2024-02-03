@@ -22,7 +22,7 @@ exports.authAdmin = (req,res,next) => {
     }
 }
 
-exports.authUser = (req,res,next) =>{
+exports.authRightUser = (req,res,next) =>{
     const token = req.cookies['X-OBSERVATORY-AUTH'];
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
@@ -56,6 +56,28 @@ exports.authUser = (req,res,next) =>{
                             });
                     }
                 });
+            }
+        })
+    }
+    else {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+}
+
+
+exports.authUser = (req,res,next) => { 
+    var token = req.cookies['X-OBSERVATORY-AUTH'];
+    if (!token)
+        token = req.header('X-OBSERVATORY-AUTH')
+    if (token) {
+        jwt.verify(token,secret_key, (err,decoded) => {
+            if (err){
+                return res.status(401).json({ error: 'Unauthorized' });
+            }
+            else {
+                //console.log(decoded);
+                req.userID = decoded.id;
+                next();
             }
         })
     }

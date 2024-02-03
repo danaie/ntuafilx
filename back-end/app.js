@@ -8,6 +8,7 @@ const adminRoutes = require('./routes/admin');
 const uploadRoutes = require('./routes/upload');
 const userRoutes = require('./routes/user');
 const authRoutes = require('./routes/auth');
+const watchlistRoutes = require('./routes/watchlist');
 
 const authMiddleware = require('./middlewares/auth');
 //const jsonToCsvMiddleware = require('./middlewares/jsonTOcsv');
@@ -31,6 +32,7 @@ app.use(base_url+'/admin',adminRoutes);
 app.use(base_url+'/admin/upload', authMiddleware.authAdmin, uploadRoutes);
 app.use(base_url+'/', userRoutes);
 app.use(base_url+'/', authRoutes);
+app.use(base_url+'/watchlist',authMiddleware.authUser,watchlistRoutes);
 
 
 
