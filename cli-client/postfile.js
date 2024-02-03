@@ -1,6 +1,8 @@
 const fs = require('fs');
 const axios = require('axios');
 
+const token_path = __dirname+'/.env'
+
 function post_file(path,file) {
     const formData = {
         file: fs.createReadStream(file)
@@ -8,7 +10,7 @@ function post_file(path,file) {
     const config = {
     headers: {
         'Content-Type': 'multipart/form-data',
-        'requested-by-cli': fs.readFileSync(".token", "utf8")
+        'X-OBSERVATORY-AUTH': process.env.TOKEN
             }
         };
     axios
