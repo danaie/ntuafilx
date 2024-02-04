@@ -1,14 +1,24 @@
 const { pool } = require('../utils/database');
 
 exports.getall = (req, res, next) => {
-    res.status(200).json({ message: 'Hello World!' });
+    const userid = req.userID;
+    const query = 'select t.originalTitle from title t inner join watchlist w on t.titleID = w.titleID where w.userID = ?';
+    pool.getConnection((err,connection) => {
+        if (err)
+            return res.status(500).json({error:err});
+        connection.query(query,userid,(error, result) => {
+            if (error)
+                return res.status(500).json({error:error});
+            return res.status(200).json({data:result});
+        })
+    })
 }
 
 exports.postMovie = (req, res, next) => {
     const userid = req.userID;
     const titleid = req.params.titleID;
     console.log(userid,titleid)
-    const query = `insert into watchlist (userID, titleID) values (?,?)`
+    const query = 'insert into watchlist (userID, titleID) values (?,?)'
     pool.getConnection((err,connection) => {
         if (err) {
             console.log(err)
