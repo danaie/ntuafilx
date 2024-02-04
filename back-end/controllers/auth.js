@@ -135,3 +135,25 @@ exports.viewUser = (req,res,next) => {
         }
     });
 }
+
+exports.profile = (req,res,next) => {
+    const userid = req.userID;
+    const query = 'select * from user where userID = ?';
+    pool.getConnection((err,connection) => {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ error: err});
+        }
+        else {
+            connection.query(query, userid, (error,result) => {
+                connection.release();
+                //console.log(result);
+                if (error) {
+                    console.log(error)
+                    return res.status(500).json({ error: error});
+                };
+                return res.status(200).json(result[0]);
+                });
+        }
+    });
+}
