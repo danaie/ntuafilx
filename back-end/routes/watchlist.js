@@ -6,7 +6,7 @@ const watchlistController = require('../controllers/watchlist');
 const router =express.Router();
 
 router.get('/',watchlistController.getall);
-router.post('/add/:titleID',watchlistController.postMovie);
-router.delete('/remove/:titleID',watchlistController.deleteMovie);
+router.post('/:titleID',watchlistController.postMovie);
+router.delete('/:titleID',watchlistController.deleteMovie);
 
 module.exports = router;
