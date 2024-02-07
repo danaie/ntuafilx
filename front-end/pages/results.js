@@ -26,7 +26,7 @@ const ResultsPage = () => {
   useEffect(() => {
     const fetchDataForResultPage = async () => {
       try {
-        const apiRoute = getApiRoute(searchCategory); // Use searchCategory instead of searchResults
+        const apiRoute = getApiRoute(searchResults); // Use searchCategory instead of searchResults
   
         const response = await fetchData(apiRoute, {
           method: 'GET',
@@ -36,26 +36,29 @@ const ResultsPage = () => {
         });
   
         const data = await response.json();
-  
-        if (searchCategory === 'actor') {
-          fetchactorresult();
-          fetchtopratedmoviesofactor();
-          fetchmostrecentmoviesofactor();
-        } else if (searchCategory === 'genre') {
-          fetchTopRatedMovies(data);
+        if (searchResults && Array.isArray(searchResults)) {
+          if (searchCategory === 'actor') {
+            fetchactorresult();
+            fetchtopratedmoviesofactor();
+            fetchmostrecentmoviesofactor();
+          } else if (searchCategory === 'genre') {
+            fetchTopRatedMovies(data);
+          }
+          fetchPosters(data);
+          setResultsWithPosters(data);
+        } else {
+          // Handle the case where searchResults is not an array or is undefined
+          console.error('Invalid search results:', searchResults);
         }
-  
-        fetchPosters(data);
-        setResultsWithPosters(data);
       } catch (error) {
-        console.error(`Error fetching data for ${searchCategory}:`, error);
+        console.error('Error fetching data:', error);
       }
     };
   
-    if (searchCategory) {
+    if (searchResults) {
       fetchDataForResultPage();
     }
-  }, [searchCategory]);
+  }, [searchResults]);
 
   const fetchTopRatedMovies = async () => {
     try {

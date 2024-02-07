@@ -10,7 +10,6 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      // Send the credentials to the server for validation
       const response = await fetchData('http://localhost:3000/login', {
         method: 'POST',
         headers: {
@@ -30,9 +29,6 @@ const Login = () => {
         if (role === 'user') {
           router.push('/user-home');
           console.log('Login successful for user');
-        } else if (role === 'admin') {
-          router.push('/admin-home');
-          console.log('Login successful for admin');
         } else {
           console.error('Unknown role. Login failed');
         }
@@ -73,7 +69,7 @@ const Login = () => {
       </div>
       <div className="main-content">
         <div className="login-form">
-          <h2>Login</h2> {/* New label for the login form */}
+          <h2>Login</h2> 
           <label htmlFor="username">Username:</label>
           <input
             type="text"
@@ -98,7 +94,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-
       <style jsx>{`
         input {
           padding: 10px;

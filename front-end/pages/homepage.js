@@ -15,7 +15,7 @@ const BookList = () => {
   const [actorresult, setActorResultInfo] = useState([]);
   const [topRatedMoviesOfActor, setTopRatedMoviesOfActor] = useState([]);
   const [mostRecentMoviesOfActor, setMostRecentMovies] = useState([]);
-
+  
   const fetchPosters = async (results) => {
     const resultsWithPosters = [];
 
@@ -156,17 +156,13 @@ const BookList = () => {
     const categoryRoutes = {
       title: '/searchtitle', //returns the movies related to the title we searched
       actor: '/searchname', //returns the movies the contributor has played and also the top 10 rated, the most recent and the person
-      genre: '/searchgenre', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated
-      i will make the different routes edition but if i want to keep the one then i will just keep it as it is
-      */
+      genre: '/searchgenre', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated i will make the different routes edition but if i want to keep the one then i will just keep it as it is*/
       releaseYear: '/searchrelyear', //returns the movies that were released the year we searched
-    };
+  };
 
     return categoryRoutes[searchCategory] || '/searchtitle'; // Default to 'searchtitle' if category is not found
   };
   
-  
-
   return (
     <div className="home-container">
       <div className="header">
@@ -240,4 +236,4 @@ const BookList = () => {
 export default BookList;
 
 /* ayto mpainei an thelisoume na dialeksoume ti anazitisi tha kanoume kai tha to valoyme sto form, akrivws panw apo to submit
-          */
+*/
