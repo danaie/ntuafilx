@@ -1,7 +1,7 @@
 const { pool } = require('../utils/database');
 
 exports.getTitles = (req, res, next) => {
-    const q = 'SELECT titleID, originalTitle FROM title';
+    const q = 'SELECT originalTitle, titleID, image FROM title';
     pool.query(q, (error, results, fields) => {
         if (error) {
             console.error('Error executing SELECT query:', error);
@@ -285,5 +285,33 @@ exports.getSearchName = (req, res) => {
                 return res.status(500).json({ error: 'Internal Server Error' });
             });
     });
-};
+}
 
+
+exports.getTopRated = (req,res,next) => {
+    const query = 'select t.titleID, t.image, t.originalTitle, r.averageRating from title t join ratings r ON t.titleID = r.titleID order by r.averageRating desc limit 10';
+    pool.getConnection((err,connection) => {
+        if (err)
+            return res.status(500).json({error:err});
+        connection.query(query,(error, result) => {
+            if (error) 
+                return res.status(500).json({error:error});
+            return res.status(200).json({data:result});
+        })
+    })
+}
+
+exports.getKnownFor = (req, res, next) => {
+    const id = req.params.nameID;
+    console.log(id);
+    const query = 'select t.titleID, t.image ,t.primaryTitle from nameBasics n join title t on FIND_IN_SET(t.titleID, n.knowForTitles) > 0 where n.basicsID = ?';
+    pool.getConnection((err,connection) => {
+        if (err)
+            return res.status(500).json({error:err});
+        connection.query(query,id,(error, result) => {
+            if (error) 
+                return res.status(500).json({error:error});
+            return res.status(200).json({data:result});
+        })
+    })
+}

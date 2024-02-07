@@ -2,7 +2,7 @@ const { pool } = require('../utils/database');
 
 exports.getall = (req, res, next) => {
     const userid = req.userID;
-    const query = 'select t.originalTitle from title t inner join watchlist w on t.titleID = w.titleID where w.userID = ?';
+    const query = 'select t.originalTitle, t.titleID, t.image from title t inner join watchlist w on t.titleID = w.titleID where w.userID = ?';
     pool.getConnection((err,connection) => {
         if (err)
             return res.status(500).json({error:err});

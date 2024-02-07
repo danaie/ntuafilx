@@ -1,26 +1,21 @@
 
 //search: 
 // http://localhost:3000/homepagewhenloggedin
-
-
-// Import necessary modules
+// HomeLoggedIn.js
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { FaUser, FaSearch } from 'react-icons/fa';
-import axios from 'axios'; // Api requests
+import axios from 'axios';
 import '../styles/globalstyles.css';
+import { useRouter } from 'next/router';
 
-// HomeLoggedIn component
 const HomeLoggedIn = () => {
   const [loggedIn, setLoggedIn] = useState(true);
   const [username, setUsername] = useState('');
   const [movies, setMovies] = useState([]);
   const router = useRouter();
 
-  // Fetch username and movies on component mount
   useEffect(() => {
-    // API call for username
     axios.get('/api/getUsername')
       .then(response => {
         setUsername(response.data.username);
@@ -29,10 +24,9 @@ const HomeLoggedIn = () => {
         console.error('Error fetching username:', error);
       });
 
-    // API call to fetch movies
     axios.get('http://localhost:9876/ntuaflix_api/titles')
       .then(response => {
-        setMovies(response.data.data); // Assuming the response is an array of movies
+        setMovies(response.data.data);
         console.log('Movies:', response.data.data);
       })
       .catch(error => {
@@ -40,33 +34,30 @@ const HomeLoggedIn = () => {
       });
   }, []);
 
-  // Logout functionality
   const handleLogout = () => {
     setLoggedIn(false);
     router.push('/searchresults');
   };
 
-  // Handle profile button click
   const handleProfileClick = () => {
     router.push('/profile');
   };
 
   return (
     <div className="home-container">
-      {/* Header Section */}
-      <div className="header" style={{ backgroundColor: '#add8e6', padding: '1rem', width: '100%', margin: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div className="title-container" style={{ flex: '1' }}>
+      <div className="header">
+        <div className="title-container">
           <Link href="/homepage" as="/">
-            <h1 className="title" style={{ margin: '0', fontSize: '1.5rem', textDecoration: 'none', color: 'white' }}>Ntuaflix</h1>
+            <div className="title">Ntuaflix</div>
           </Link>
         </div>
-        <div className="search-bar" style={{ flex: '2', display: 'flex', alignItems: 'center' }}>
-          <input type="text" placeholder="Search for movies: title, category, actor, or genre" style={{ width: '100%', padding: '0.5rem', marginRight: '1rem' }} />
-          <button className="btn btn-primary" style={{ width: 'auto', display: 'flex', alignItems: 'center' }}>
+        <div className="search-bar">
+          <input type="text" placeholder="Search for movies: title, category, actor, or genre" />
+          <button className="btn btn-primary">
             <FaSearch style={{ marginRight: '5px' }} /> Search
           </button>
         </div>
-        <div className="user-actions" style={{ display: 'flex', alignItems: 'center', flex: '1', justifyContent: 'flex-end' }}>
+        <div className="user-actions">
           <button className="btn btn-secondary profile-button" onClick={handleProfileClick}>
             <FaUser style={{ marginRight: '5px' }} /> Profile
           </button>
@@ -76,26 +67,22 @@ const HomeLoggedIn = () => {
         </div>
       </div>
 
-      {/* Navigation Links */}
-      <div className="nav-links" style={{ padding: '1rem', backgroundColor: '#ffffff' }}>
-        <Link href="/watchlist" as="/watchlist" style={{ textDecoration: 'none', marginBottom: '1rem', display: 'block' }}>
+      <div className="nav-links">
+        <Link href="/watchlist" as="/watchlist">
           <span className="nav-link">Watchlist</span>
-        </Link>
-        <Link href="/liked_movies" as="/liked_movies" style={{ textDecoration: 'none', display: 'block' }}>
-          <span className="nav-link">Liked Movies</span>
         </Link>
       </div>
 
-      {/* Main Content Section*/}
       <div className="main-content">
         <h2>Movies from Backend</h2>
         {movies && movies.length > 0 ? (
-          <ul>
+          <ul className="movie-list">
             {movies.map(movie => (
-              <li key={movie.id}>
-                <Link href="/moviedetailsgt/[titleID]" as={`/moviedetailsgt/${encodeURIComponent(movie.id)}`}>
-                  <div>{movie.originalTitle}</div>
-                </Link>
+              <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
+                <div>
+                  {movie.originalTitle}
+                  <img src={movie.titlePoster} alt={movie.title} />
+                </div>
               </li>
             ))}
           </ul>
@@ -103,9 +90,62 @@ const HomeLoggedIn = () => {
           <p>No movies available</p>
         )}
       </div>
+
+      <style jsx>{`
+        .home-container {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 20px;
+        }
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+          margin-bottom: 20px;
+        }
+
+        .title-container {
+          font-size: 24px;
+          font-weight: bold;
+        }
+
+        .search-bar {
+          display: flex;
+          align-items: center;
+        }
+
+        .search-bar input {
+          margin-right: 10px;
+          padding: 5px;
+        }
+
+        .user-actions button {
+          margin-left: 10px;
+        }
+
+        .nav-links {
+          margin-bottom: 20px;
+        }
+
+        .movie-list {
+          list-style: none;
+          padding: 0;
+        }
+
+        .movie-list li {
+          cursor: pointer;
+          margin-bottom: 10px;
+        }
+      `}</style>
     </div>
   );
 };
 
 export default HomeLoggedIn;
+
+
+
 

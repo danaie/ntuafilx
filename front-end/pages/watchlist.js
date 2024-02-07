@@ -8,55 +8,66 @@
 //search: 
 // http://localhost:3000/homepagewhenloggedin
 
-// components/HomeLoggedIn.js
-
-import { useState } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { FaUser, FaSearch } from 'react-icons/fa'; // Import FaSearch icon
-import '../styles/globalstyles.css'; // Assuming Tailwind CSS is included here
+
+
+// ... (your existing imports)
 
 const Watchlist = () => {
-  const [loggedIn, setLoggedIn] = useState(true);
+  const [watchlist, setWatchlist] = useState([]);
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Placeholder for logout functionality
-    // You should implement your actual logout logic here
-    setLoggedIn(false);
+  useEffect(() => {
+    // Fetch the user's watchlist when the component mounts
+    fetchWatchlist();
+  }, []);
 
-    // Navigate to /searchresults after logout
-    router.push('/searchresults');
+  const fetchWatchlist = async () => {
+    try {
+      const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist');
+      const data = await response.json();
+      setWatchlist(data); // Make sure data is an array of objects
+    } catch (error) {
+      console.error('Error fetching watchlist:', error);
+    }
+  };
+
+  const removeFromWatchlist = async (titleID) => {
+    try {
+      await fetch(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      // Refresh watchlist data after removing a movie
+      fetchWatchlist();
+    } catch (error) {
+      console.error('Error removing from watchlist:', error);
+    }
   };
 
   return (
     <div className="home-container">
       <div className="header" style={{ backgroundColor: '#add8e6', padding: '1rem', width: '100%', margin: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Link href="/homepage" style={{ textDecoration: 'none', flex: '1' }}>
-          <h1 className="title" style={{ margin: '0', fontSize: '1.5rem' }}>Ntuaflix</h1>
-        </Link>
-        <div className="search-bar" style={{ flex: '2', display: 'flex', alignItems: 'center' }}>
-          <input type="text" placeholder="Search for movies: title, category, actor, or genre" style={{ width: '100%', padding: '0.5rem', marginRight: '1rem' }} />
-          <button className="btn btn-primary" style={{ width: 'auto', display: 'flex', alignItems: 'center' }}>
-            <FaSearch style={{ marginRight: '5px' }} /> Search
-          </button>
-        </div>
-        <div className="user-actions" style={{ display: 'flex', alignItems: 'center', flex: '1', justifyContent: 'flex-end' }}>
-          {/* Add components or links specific to logged-in users */}
-          <Link href="/profile" style={{ textDecoration: 'none', marginRight: '10px' }}>
-            <button
-              className="btn btn-secondary profile-button" // Added a specific class for the profile button
-            >
-              <FaUser style={{ marginRight: '5px' }} /> Profile
-            </button>
-          </Link>
-          <button className="btn btn-primary" onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
+        {/* ... */}
       </div>
       <div className="main-content">
-        {/* Other main content for logged-in users goes here */}
+        <h2>My Watchlist</h2>
+        <ul>
+          {Array.isArray(watchlist) && watchlist.length > 0 ? (
+            watchlist.map((movie) => (
+              <li key={movie.titleID}>
+                {movie.title && <span>{movie.title}</span>}
+                <button onClick={() => removeFromWatchlist(movie.titleID)}>Remove</button>
+              </li>
+            ))
+          ) : (
+            <p>No movies in the watchlist</p>
+          )}
+        </ul>
       </div>
     </div>
   );
