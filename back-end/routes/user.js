@@ -11,5 +11,7 @@ router.get('/bygenre', userController.getbyGendre);
 router.get('/names', userController.getNames);
 router.get('/name/:nameID', userController.getNameById);
 router.get('/searchname', userController.getSearchName);
+router.get('/toprated',userController.getTopRated);
+router.get('/knownfor/:nameID',userController.getKnownFor);
 
 module.exports = router;

@@ -139,7 +139,7 @@ exports.postNamebasics  = (req, res, next) => {
     const query = "insert ignore into nameBasics (basicsID, primaryName, birthYear, deathYear, primaryProfession, knowForTitles, image) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
         if (error) res.status(500).json({status:"failed", error:error});
-        else res.status(200).json({status:"OK",result : result, message:"Name Basics updated"});
+        else res.status(200).json({status:"OK", message:"Name Basics updated"});
     });
 }
 
