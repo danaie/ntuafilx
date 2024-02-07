@@ -10,39 +10,15 @@ const BookList = () => {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   const [searchCategory, setSearchCategory] = useState('title'); // Default search category
+  const [minRating, setMinRating] = useState('');
+  const [fromYear, setFromYear] = useState('');
+  const [toYear, setToYear] = useState('');
   const [resultsWithPosters, setResultsWithPosters] = useState([]);
   const [topRatedMovies, setTopRatedMovies] = useState([]);
   const [actorresult, setActorResultInfo] = useState([]);
   const [topRatedMoviesOfActor, setTopRatedMoviesOfActor] = useState([]);
   const [mostRecentMoviesOfActor, setMostRecentMovies] = useState([]);
   
-  const fetchPosters = async (results) => {
-    const resultsWithPosters = [];
-
-    for (const item of results) {
-      const posterURL = await fetchPoster(item.titleID);
-      resultsWithPosters.push({ ...item, titlePoster: posterURL });
-    }
-
-    setResultsWithPosters(resultsWithPosters);
-  };
-
-  const fetchPoster = async (titleID) => {
-    try {
-      const response = await fetchData(`/title/${titleID}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      return data.poster;
-    } catch (error) {
-      console.error('Error fetching poster for titleID:', titleID, error);
-      return '';
-    }
-  };
 
   const fetchTopRatedMovies = async () => {
     try {
@@ -114,50 +90,54 @@ const BookList = () => {
 
   const handleSearch = async (event) => {
     event.preventDefault();
-  
+
     try {
-      const apiRoute = getApiRoute(searchCategory);
-  
+      let apiRoute = '';
+      let params = {};
+
+      if (searchCategory === 'title') {
+        apiRoute = '/searchtitle';
+        params = {
+          titlepart: searchTerm,
+        };
+      } else if (searchCategory === 'actor') {
+        apiRoute = '/searchname';
+        params = {
+          namepart: searchTerm,
+        };
+      } else if (searchCategory === 'genre') {
+        apiRoute = '/bygenre'; // Update the API route here
+        params = {
+          qgenre: searchTerm, // Assuming you want to use the searchTerm for the genre
+          minrating: minRating, // Use minRating here
+          yrFrom: fromYear, // Use fromYear here
+          toyrTo: toYear, // Use toYear here
+        };
+      }
+
       const response = await fetchData(apiRoute, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          titlePart: searchCategory === 'title' ? searchTerm : '', // Include titlePart only for title search
-          namePart: searchCategory === 'actor' ? searchTerm : '', // Include namePart only for actor search
-        }),
+        body: JSON.stringify(params),
       });
-  
+
       const data = await response.json();
-  
-      if (searchCategory === 'actor') {
-        fetchActorResult();
-        fetchTopRatedMoviesOfActor();
-        fetchMostRecentMoviesOfActor();
-      } else if (searchCategory === 'genre') {
-        fetchTopRatedMovies(data);
-      }
-  
-      fetchPosters(data);
-      setResultsWithPosters(data);
-  
-      router.push({
-        pathname: '/results',
-        query: { searchResults: data, searchCategory }, // Pass searchCategory in the query
-      });
+
+      // Rest of your code...
     } catch (error) {
       console.error(`Error searching for ${searchCategory}s:`, error);
     }
   };
+  
 
   const getApiRoute = (searchCategory) => {
     // Map search categories to corresponding API routes
     const categoryRoutes = {
-      title: '/searchtitle', //returns the movies related to the title we searched
-      actor: '/searchname', //returns the movies the contributor has played and also the top 10 rated, the most recent and the person
-      genre: '/searchgenre', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated i will make the different routes edition but if i want to keep the one then i will just keep it as it is*/
-      releaseYear: '/searchrelyear', //returns the movies that were released the year we searched
+      title: '/searchtitles', //returns the movies related to the title we searched
+      actor: '/searchnames', //returns the movies the contributor has played and also the top 10 rated, the most recent and the person
+      genre: '/searchgenres', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated i will make the different routes edition but if i want to keep the one then i will just keep it as it is*/
   };
 
     return categoryRoutes[searchCategory] || '/searchtitle'; // Default to 'searchtitle' if category is not found
@@ -166,7 +146,7 @@ const BookList = () => {
   return (
     <div className="home-container">
       <div className="header">
-        <Link href="/searchresults" style={{ textDecoration: 'none' }}>
+        <Link href="/homepage" style={{ textDecoration: 'none' }}>
           <h1 className="title">Ntuaflix</h1>
         </Link>
         <div className="search-bar">
@@ -185,11 +165,8 @@ const BookList = () => {
               <option value="title">Title</option>
               <option value="actor">Actor</option>
               <option value="genre">Genre</option>
-              <option value="releaseYear">Release</option>
             </select>   
-            <Link href="/results" style={{ textDecoration: 'none' }}>
-            <button type="submit">Search</button>
-            </Link>
+           <button type="submit">Search</button>
           </form>
         </div>
         <div className="auth-buttons">
@@ -234,6 +211,3 @@ const BookList = () => {
 };
 
 export default BookList;
-
-/* ayto mpainei an thelisoume na dialeksoume ti anazitisi tha kanoume kai tha to valoyme sto form, akrivws panw apo to submit
-*/
