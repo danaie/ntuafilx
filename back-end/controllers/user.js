@@ -1,7 +1,7 @@
 const { pool } = require('../utils/database');
 
 exports.getTitles = (req, res, next) => {
-    const q = 'SELECT originalTitle FROM title';
+    const q = 'SELECT originalTitle, titleID, image FROM title';
     pool.query(q, (error, results, fields) => {
         if (error) {
             console.error('Error executing SELECT query:', error);
