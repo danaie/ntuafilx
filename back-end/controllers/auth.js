@@ -88,7 +88,7 @@ exports.login = (req,res,next) => {
                     return res.status(500).json({ error: error});
                 };
                 if (result.length == 0)
-                    return res.status(400).json({error:"Invalid username"})
+                    return res.status(404).json({error:"Invalid username"})
                 else {
                     const { userID, password, isAdmin } = result[0]
                     bcrypt.compare(req_password, password, function(err, res_bcrypt) {
