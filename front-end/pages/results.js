@@ -132,31 +132,41 @@ const ResultsPage = () => {
     event.preventDefault();
   
     try {
-      const apiRoute = getApiRoute(searchCategory);
+      let apiRoute = '';
+      let params = {};
+  
+      if (searchCategory === 'title') {
+        apiRoute = '/searchtitle';
+        params = {
+          titlepart: searchTerm,
+        };
+      } else if (searchCategory === 'actor') {
+        apiRoute = '/searchname';
+        params = {
+          namepart: searchTerm,
+        };
+      } else if (searchCategory === 'genre') {
+        apiRoute = getApiRoute(searchCategory);
+        // Additional handling for genre search if needed
+      }
   
       const response = await fetchData(apiRoute, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          titlePart: searchCategory === 'title' ? searchTerm : '', // Include titlePart only for title search
-          namePart: searchCategory === 'actor' ? searchTerm : '', // Include namePart only for actor search
-        }),
+        body: JSON.stringify(params),
       });
   
       const data = await response.json();
   
       if (searchCategory === 'actor') {
-        fetchactorresult();
-        fetchtopratedmoviesofactor();
-        fetchmostrecentmoviesofactor();
+        fetchActorResult();
+        fetchTopRatedMoviesOfActor();
+        fetchMostRecentMoviesOfActor();
       } else if (searchCategory === 'genre') {
         fetchTopRatedMovies(data);
       }
-  
-      fetchPosters(data);
-      setResultsWithPosters(data);
   
       router.push({
         pathname: '/results',
@@ -178,33 +188,6 @@ const ResultsPage = () => {
     return categoryRoutes[searchCategory] || '/searchtitle'; // Default to 'searchtitle' if category is not found
   };
 
-  const fetchPosters = async (results) => {
-    const resultsWithPosters = [];
-
-    for (const item of results) {
-      const posterURL = await fetchPoster(item.titleID);
-      resultsWithPosters.push({ ...item, titlePoster: posterURL });
-    }
-
-    setResultsWithPosters(resultsWithPosters);
-  };
-
-  const fetchPoster = async (titleID) => {
-    try {
-      const response = await fetchData(`/title/${titleID}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      return data.poster;
-    } catch (error) {
-      console.error('Error fetching poster for titleID:', titleID, error);
-      return '';
-    }
-  };
 
   return (
     <div className="home-container">

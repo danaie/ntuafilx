@@ -11,7 +11,7 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       // Send the signup data to the server
-      const response = await fetchData('http://localhost:3000/signup', {
+      const response = await fetchData('http://localhost:9876/ntuaflix_api/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
