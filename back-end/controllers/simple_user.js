@@ -27,6 +27,7 @@ exports.getbyGendreSimple =  (req, res, next) => {
     const { minrating } = req.query;
     const { yrFrom } = req.query;
     const { yrTo } = req.query;
+    console.log(qgenre, minrating);
     q = "SELECT titleID, originalTitle,image FROM (title INNER JOIN ratings USING (titleID)) WHERE genres LIKE ? AND averageRating >= ?";
     if (yrFrom != null && yrTo != null) { q = q + "AND startYear BETWEEN ? AND ?" }
     pool.query(q, [`%${qgenre}%`, minrating, yrFrom, yrTo], (error, searchresults, fields) => {
