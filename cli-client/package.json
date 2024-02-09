@@ -19,5 +19,9 @@
     "dotenv": "^16.4.1",
     "form-data": "^4.0.0",
     "inquirer": "^9.2.12"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }
