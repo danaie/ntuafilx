@@ -135,9 +135,9 @@ const BookList = () => {
   const getApiRoute = (searchCategory) => {
     // Map search categories to corresponding API routes
     const categoryRoutes = {
-      title: '/searchtitles', //returns the movies related to the title we searched
-      actor: '/searchnames', //returns the movies the contributor has played and also the top 10 rated, the most recent and the person
-      genre: '/searchgenres', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated i will make the different routes edition but if i want to keep the one then i will just keep it as it is*/
+      title: '/searchtitle', //returns the movies related to the title we searched
+      actor: '/searchname', //returns the movies the contributor has played and also the top 10 rated, the most recent and the person
+      genre: '/searchgenre', /*returns the movies of the genre we search and maybe the top 10 rated too?? otherwise we will have a different route for the top 10 rated i will make the different routes edition but if i want to keep the one then i will just keep it as it is*/
   };
 
     return categoryRoutes[searchCategory] || '/searchtitle'; // Default to 'searchtitle' if category is not found

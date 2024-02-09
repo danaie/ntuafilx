@@ -17,23 +17,15 @@ const Search = () => {
       let response;
       if (searchType === 'title') {
         response = await axios.get('http://localhost:9876/ntuaflix_api/searchtitle', {
-          params: { titlePart: searchQuery },
+          params: { titlePart: searchQuery }, // Use 'titlepart' instead of 'titlePart'
         });
-      } else if (searchType === 'genre') {
-        response = await axios.get('/api/searchgenre', {
-          params: { genre: searchQuery },
-        });
-      } else if (searchType === 'actor') {
-        response = await axios.get('/api/searchactor', {
-          params: { actor: searchQuery },
-        });
-      }
-      setSearchResults(response.data);
+        setSearchResults(response.data);
+      } 
     } catch (error) {
       console.error('Error searching:', error.message);
     }
   };
-
+  
   return (
     <div>
       <form onSubmit={handleSearch}>
@@ -51,10 +43,10 @@ const Search = () => {
         <button type="submit">Search</button>
       </form>
       <div>
-        {searchResults.map((result) => (
-          <div key={result.id}>{result.title}</div>
-        ))}
-      </div>
+    {searchResults.map((result) => (
+    <div key={result.id}>{result.title}</div>
+    ))}
+    </div>
     </div>
   );
 };
