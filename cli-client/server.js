@@ -10,7 +10,7 @@ require('dotenv').config();
 const base_url = 'http://localhost:9876/ntuaflix_api';
 
 const post_file = require('./postfile.js');
-const token_path = __dirname+'/.env'
+const token_path = __dirname+'/.token'
 
 program
     .version('1.0.0')
@@ -18,15 +18,16 @@ program
     .description('A cli for ntuaflix')
 
 program
-    .command('healthchek')
+    .command('healthcheck')
     .alias('hc')
     .description('Perform a health check to database / server')
     .action(() => {
+      const token = fs.readFileSync(token_path, "utf8");
       var config = {
         method: 'get',
         url: base_url+'/admin/healthcheck',
         headers: {
-          'X-OBSERVATORY-AUTH': process.env.TOKEN
+          'X-OBSERVATORY-AUTH': token
       },
       };
       axios(config)
@@ -37,17 +38,18 @@ program
               console.log(err.response.data.error)  
           })
     });
-
+    
 program 
     .command('resetall')
     .alias('r')
     .description('Reset database')
     .action(() => {
+      const token = fs.readFileSync(token_path, "utf8");
       var config = {
         method: 'post',
         url: base_url+'/admin/resetall',
         headers: {
-          'X-OBSERVATORY-AUTH': process.env.TOKEN
+          'X-OBSERVATORY-AUTH': token
       },
       };
       axios(config)
@@ -163,7 +165,7 @@ program
     axios
       .post(base_url+'/login',credentials)
       .then((res) => {
-        fs.writeFile(token_path, 'TOKEN='+res.data.token, (err) => {
+        fs.writeFile(token_path, res.data.token, (err) => {
           if (err) {
             console.error(err);
             return;
@@ -201,11 +203,12 @@ program
       console.error('Error: Please provide a username using the -n or --username option.')
       return;
     }
+    const token = fs.readFileSync(token_path, "utf8");
     var config = {
       method: 'get',
       url: base_url+`/admin/users/${options.username}`,
       headers: {
-        'X-OBSERVATORY-AUTH': process.env.TOKEN
+        'X-OBSERVATORY-AUTH': token
     },
     };
     axios(config)
@@ -227,11 +230,12 @@ program
       console.error('Error: Please provide a username using the -n or --username option and a password using the -p or --passw option');
       return;
     }
+    const token = fs.readFileSync(token_path, "utf8");
     var config = {
       method: 'post',
       url: base_url+`/admin/usermod/${options.username}/${options.passw}`,
       headers: {
-        'X-OBSERVATORY-AUTH': process.env.TOKEN
+        'X-OBSERVATORY-AUTH': token
     },
     };
     axios(config)
