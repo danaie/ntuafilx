@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
+import Link from 'next/link';
+import '../styles/globalstyles.css';
 
 const ActorDetails2 = () => {
   const router = useRouter();
@@ -56,72 +58,65 @@ const ActorDetails2 = () => {
 
 
   return (
-    <div>
-      <h2>Actor Details</h2>
-      {actorData ? (
-  <div>
-    {Object.entries(actorData).map(([key, value]) => (
-      <div key={key}>
-        {/* Check if the key is not equal to "titles" before rendering */}
-        {key !== "titles" && (
-          <>
-            <h3>{key}</h3>
-            <ul>
-              {Array.isArray(value) ? (
-                value.map((item, index) => (
-                  <li key={index}>
-                    {Object.entries(item).map(([subKey, subValue]) => (
-                      <div key={subKey}>
-                        <strong>{subKey}: </strong>
-                        {subValue}
-                      </div>
-                    ))}
-                  </li>
-                ))
-              ) : (
-                <li>
-                  <div key={key}>
-                    <strong>{key}: </strong>
-                    {value}
-                  </div>
-                </li>
-              )}
-            </ul>
-          </>
-        )}
+    <div className="home-container">
+      <div className="header">
+      <Link href="/new" style={{ textDecoration: 'none' }}>
+          <h1 className="title">Ntuaflix</h1>
+        </Link>
+        <div className="auth-buttons">
+          <Link href="/login" style={{ textDecoration: 'none' }}>
+            <div className="login-button">Login</div>
+          </Link>
+          <Link href="/signup" style={{ textDecoration: 'none' }}>
+            <div className="login-button">Sign up</div>
+          </Link>
+        </div>     
       </div>
-    ))}
-  </div>
-) : (
-  <p>Loading...</p>
-)}
-
-    {actorKnownMovies ? (
+      <div>
+      {actorData && (
         <div>
-          <h2>Known For Movies</h2>
-          <ul>
-            {actorKnownMovies.map((movie, index) => (
-              <li key={index}>
-                <div>
-                <li key={movie.titleID} onClick={() => handleMovieClick(movie.titleID)}>
-                  <strong>{movie.primaryTitle} </strong>
-                </li>
-                </div>
-                {movie.image && (
-            <div>
+          <div style={{ textAlign: 'center' }}>
+          {actorData.image ? (
               <img
-                src={movie.image.replace('{width_variable}', 'w500')}
-                alt={movie.primaryTitle}
-                style={{ width: '200px', height: 'auto' }} // Set the desired width here
+                src={actorData.image.replace('{width_variable}', 'w200')} // Adjusted width to fit the box
+                alt={actorData.primaryName}
+                style={{ width: '200px', height: '88%', objectFit: 'cover' }} // Set the desired width here
               />
-            </div>
-          )}
-        </li>
-      ))}
-          </ul>
+            ) : (
+              <div>No Image Available</div>
+            )}
+            <p><strong>Name:</strong> {actorData.primaryName}</p>
+            <p><strong>Birth Year:</strong> {actorData.birthYear}</p>
+            {actorData.deathYear && <p><strong>Death Year:</strong> {actorData.deathYear}</p>}
+            <p><strong>Primary Profession:</strong> {actorData.primaryProfession}</p>
+          </div>
         </div>
-      ) : (
-        <p>Loading known for movies...</p>
+      )}
+    </div>
+    {actorKnownMovies && actorKnownMovies.length > 0 && (
+      <div style={{ textAlign: 'center', marginTop: '30px' }}> {/* Added marginTop style here */}          <h3>Known For Movies:</h3>
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+  {actorKnownMovies.map((movie, index) => (
+    <li key={index} onClick={() => handleMovieClick(movie.titleID)} style={{ marginBottom: '10px', cursor: 'pointer' }}>
+      <strong>{movie.primaryTitle}</strong>
+      {movie.image && (
+        <div>
+          <img
+            src={movie.image.replace('{width_variable}', 'w500')}
+            alt={movie.primaryTitle}
+            style={{ width: '200px', height: 'auto' }} // Set the desired width here
+          />
+        </div>
+      )}
+    </li>
+  ))}
+</ul>
+        </div>
+      )}
+
+      {!actorKnownMovies || actorKnownMovies.length === 0 && (
+                <div style={{ textAlign: 'center' }}>
+                <p>No known movies for this actor.</p> </div>
       )}
     </div>
   );
