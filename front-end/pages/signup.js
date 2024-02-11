@@ -11,7 +11,7 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       // Send the signup data to the server
-      const response = await fetchData('http://localhost:9876/ntuaflix_api/', {
+      const response = await fetch(`http://localhost:9876/ntuaflix_api/usermod/${username}/${password}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -39,7 +39,7 @@ const Signup = () => {
   return (
     <div className="home-container">
       <div className="header">
-        <Link href="/homepage" style={{ textDecoration: 'none' }}>
+        <Link href="/new" style={{ textDecoration: 'none' }}>
         <h1 className="title">Ntuaflix</h1>
         </Link>
         <div className="search-bar">

@@ -1,13 +1,25 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
 
 const Login = () => {
+  const [searchType, setSearchType] = useState('title');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [qgenre, setQGenre] = useState(''); // New state variable for genre field 1
+  const [minrating, setMinRating] = useState(''); // New state variable for genre field 2
+  const [yrFrom, setYrFrom] = useState('');
+  const [yrTo, setYrTo] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const handleSearchTypeChange = (e) => {
+    setSearchType(e.target.value);
+  };
   const handleLogin = async () => {
     try {
       const response = await fetch('http://localhost:9876/ntuaflix_api/login', {
@@ -21,11 +33,13 @@ const Login = () => {
       if (response.ok) {
         // Server returns OK status (e.g., 200)
         const responseData = await response.json();
-        const { token } = responseData;
-
-        // Store the access token provided by the backend response
-        localStorage.setItem('accessToken', token);
-        router.push('/homepagewhenloggedin');
+        const { token, userID } = responseData; // Assuming backend returns userID
+      
+      // Store the user ID or token in localStorage
+      localStorage.setItem('userID', userID); // You can use token instead if you prefer
+      
+      // Redirect to homepage with user ID in the URL
+      router.push(`/homepagewhenloggedin2?userID=${userID}`);
         console.log('Login successful for user');
       } else if (response.status === 400) {
         // Server returns a 400 status (Bad Request), indicating invalid credentials
@@ -45,16 +59,21 @@ const Login = () => {
     }
   };
 
+  const handleSearchClick = () => {
+    // Navigate to the /new page
+    router.push('/new');
+  };
   return (
     <div className="home-container">
       <div className="header">
-        <Link href="/searchresults" passHref style={{ textDecoration: 'none' }}>
+        <div className="search-icon" onClick={handleSearchClick}>
+        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
+      </div>
+      <div className="logo-container">
+        <Link href="/new" style={{ textDecoration: 'none' }}>
           <h1 className="title">Ntuaflix</h1>
         </Link>
-        <div className="search-bar">
-          <input type="text" placeholder="Search for movies: title, category, actor, or genre" />
-          <button>Search</button>
-        </div>
+      </div>
         <div className="auth-buttons">
           <Link href="/login" passHref  style={{ textDecoration: 'none' }}>
             <div className="login-button">Login</div>
@@ -70,19 +89,32 @@ const Login = () => {
           {errorMessage && <p className="error-message">{errorMessage}</p>}
           <label htmlFor="username">Username:</label>
           <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-
+    type="text"
+    id="username"
+    value={username}
+    onChange={(e) => setUsername(e.target.value)}
+    style={{
+      padding: '10px',
+      width: '280px',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+      marginRight: '10px'
+    }}
+  />
           <label htmlFor="password">Password:</label>
           <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+    type="password"
+    id="password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    style={{
+      padding: '10px',
+      width: '280px',
+      border: '1px solid #ccc',
+      borderRadius: '5px',
+      marginRight: '10px'
+    }}
+  />
 
           <div className="button-container">
             <button onClick={handleLogin}>Login</button>
@@ -93,14 +125,6 @@ const Login = () => {
         </div>
       </div>
       <style jsx>{`
-        input {
-          padding: 10px;
-          width: 320px;
-          border: 1px solid #ccc;
-          border-radius: 5px;
-          margin-right: 10px;
-        }
-
         .login-form {
           text-align: center;
           margin-top: 20px;
@@ -114,13 +138,6 @@ const Login = () => {
           display: block;
           margin-bottom: 5px;
         }
-
-        input {
-          padding: 10px;
-          width: 300px;
-          margin-bottom: 10px;
-        }
-
         .error-message {
           color: red;
         }

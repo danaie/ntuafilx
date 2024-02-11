@@ -32,6 +32,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
 
 const SearchResultsPage = () => {
   const router = useRouter();
@@ -53,13 +54,21 @@ const SearchResultsPage = () => {
   };
 
   const results = searchResults ? JSON.parse(searchResults) : [];
- 
+  const handleSearchClick = () => {
+    // Navigate to the /new page
+    router.push('/new');
+  };
   return (
-  <div className="home-container">
+    <div className="home-container">
       <div className="header">
-      <Link href="/new" style={{ textDecoration: 'none' }}>
-          <h1 className="title">Ntuaflix</h1>
-        </Link>
+        <div className="search-icon" onClick={handleSearchClick}>
+          <FaSearch style={{ fontSize: '26px' }} />
+        </div>
+        <div className="logo-container">
+          <Link href="/new" style={{ textDecoration: 'none' }}>
+            <h1 className="title">Ntuaflix</h1>
+          </Link>
+        </div>
         <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
             <div className="login-button">Login</div>
@@ -70,37 +79,40 @@ const SearchResultsPage = () => {
         </div>     
       </div>
       <div>
-      <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
-        Search Results for <span style={{ fontWeight: 'bold' }}>'{titlePart}'</span>
-      </h2>
-      <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
-      {results.length > 0 ? (
-  results.map((movie) => (
-    <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
-      <div className="movie-container" onClick={() => handleMovieClick(movie.titleID)}>
-        <div className="movie-title">
-          {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
-        </div>
-        <div className="movie-image">
-          {movie.image ? (
-            <img
-              src={movie.image.replace('{width_variable}', 'w200')} // Adjusted width to fit the box
-              alt={movie.originalTitle}
-              style={{ width: '200px', height: '88%', objectFit: 'cover' }} // Set the desired width here
-            />
+        <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
+          Search Results for <span style={{ fontWeight: 'bold' }}>'{titlePart}'</span>
+        </h2>
+        {searchResults ? (
+          results.length > 0 ? (
+            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
+              {results.map((movie) => (
+                <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
+                  <div className="movie-container" onClick={() => handleMovieClick(movie.titleID)}>
+                    <div className="movie-title">
+                      {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
+                    </div>
+                    <div className="movie-image">
+                      {movie.image ? (
+                        <img
+                          src={movie.image.replace('{width_variable}', 'w200')}
+                          alt={movie.originalTitle}
+                          style={{ width: '200px', height: '88%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <div>No Image Available</div>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           ) : (
-            <div>No Image Available</div>
-          )}
-        </div>
+            <p style={{ textAlign: 'center' }}>No movies found with the title '{titlePart}'</p>
+          )
+        ) : (
+          <p style={{ textAlign: 'center' }}>Invalid search query</p>
+        )}
       </div>
-    </li>
-  ))
-) : (
-  <p>No movies with this title</p>
-)}
-</ul>
-
- </div>
       <style jsx>{`
       .movie-container {
         width: 215px;
@@ -111,7 +123,6 @@ const SearchResultsPage = () => {
         display: flex;
         flex-direction: column;
       }
-      
       .movie-title {
         font-weight: bold;
       }

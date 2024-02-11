@@ -16,23 +16,14 @@ const HomeLoggedIn = () => {
   const router = useRouter();
 
   useEffect(() => {
-    axios.get('/api/getUsername')
-      .then(response => {
-        setUsername(response.data.username);
-      })
-      .catch(error => {
-        console.error('Error fetching username:', error);
-      });
+    // Retrieve user ID from the URL parameters
+    const { userID } = router.query;
 
-    axios.get('http://localhost:9876/ntuaflix_api/titles')
-      .then(response => {
-        setMovies(response.data.data);
-        console.log('Movies:', response.data.data);
-      })
-      .catch(error => {
-        console.error('Error fetching movies:', error);
-      });
-  }, []);
+    if (userID) {
+      // Fetch watchlist data for the user with the provided userID
+      fetchWatchlist(userID);
+    }
+  }, [router.query]);
 
   const handleLogout = () => {
     setLoggedIn(false);
@@ -43,6 +34,30 @@ const HomeLoggedIn = () => {
     router.push('/profile');
   };
 
+  const addMovieToWatchlist = async (userID, titleID) => {
+    try {
+      const response = await fetch(`http://localhost:9876/ntuaflix_api/postMovie/${titleID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userID }),
+      });
+      
+      if (response.ok) {
+        console.log('Movie added to watchlist successfully');
+        // Optionally, you can perform some action after the movie is added successfully
+      } else {
+        const responseData = await response.json();
+        console.error('Failed to add movie to watchlist:', responseData.error);
+        // Handle error
+      }
+    } catch (error) {
+      console.error('Error adding movie to watchlist:', error);
+      // Handle error
+    }
+  };  
+  
   return (
     <div className="home-container">
       <div className="header">
@@ -73,23 +88,25 @@ const HomeLoggedIn = () => {
         </Link>
       </div>
 
+
       <div className="main-content">
-        <h2>Movies from Backend</h2>
-        {movies && movies.length > 0 ? (
-          <ul className="movie-list">
-            {movies.map(movie => (
-              <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
-                <div>
-                  {movie.originalTitle}
-                  <img src={movie.titlePoster} alt={movie.title} />
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p>No movies available</p>
-        )}
-      </div>
+      <h2>Movies from Backend</h2>
+  {movies && movies.length > 0 ? (
+    <ul className="movie-list">
+      {movies.map(movie => (
+        <li key={movie.id} onClick={() => handleMovieClick(movie.id)}>
+          <div>
+            <p>{movie.originalTitle}</p>
+            <img src={movie.titlePoster} alt={movie.title} />
+            <button onClick={(e) => handleAddToWatchlist(e, movie.id)}>Add to Watchlist</button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p>No movies available</p>
+  )}
+</div>
 
       <style jsx>{`
         .home-container {
@@ -145,7 +162,3 @@ const HomeLoggedIn = () => {
 };
 
 export default HomeLoggedIn;
-
-
-
-

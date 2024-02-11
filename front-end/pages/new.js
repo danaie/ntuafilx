@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router'; // Import useRouter from next/router
 import '../styles/globalstyles.css';
 import Link from 'next/link';
+import Cookies from 'js-cookie';
 
 const Search = () => {
   const [searchType, setSearchType] = useState('title');
@@ -13,11 +14,25 @@ const Search = () => {
   const [yrFrom, setYrFrom] = useState('');
   const [yrTo, setYrTo] = useState('');
   const router = useRouter(); // Use useRouter hook from next/router
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleSearchTypeChange = (e) => {
     setSearchType(e.target.value);
   };
+  useEffect(() => {
+    // Check if the user has a valid token (you can customize this logic)
+    const token = localStorage.getItem('accessToken'); // Replace with your actual token storage key
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
+  const handleLogout = () => {
+    // Clear the token from localStorage (or your preferred logout logic)
+    localStorage.removeItem('accessToken');
+    setIsLoggedIn(false);
+  };
+  
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
@@ -35,15 +50,29 @@ const Search = () => {
         });
       } else if (searchType === 'actor') {
         // Search by actor
-        response = await axios.get('http://localhost:9876/ntuaflix_api/searchnames', {
-          params: { namePart: searchQuery },
-        });
-        console.log('Search response:', response.data);
-        setSearchResults(response.data.data);
-        router.push({
-          pathname: '/search-results-actor',
-          query: { searchResults: JSON.stringify(response.data.data), namePart: searchQuery }, // Pass searchResults as a query parameter
-        });
+        try {
+          response = await axios.get('http://localhost:9876/ntuaflix_api/searchnames', {
+            params: { namePart: searchQuery },
+          });
+          console.log('Search response:', response.data);
+          setSearchResults(response.data.data);
+          router.push({
+            pathname: '/search-results-actor',
+            query: { searchResults: JSON.stringify(response.data.data), namePart: searchQuery }, // Pass searchResults as a query parameter
+          });
+        } catch (error) {
+          console.error('Error searching by actor:', error.message);
+          // Handle the error case for actor search
+          setSearchResults([]); // Set empty search results
+          router.push({
+            pathname: '/search-results-actor',
+            query: {
+              searchResults: '[]', // Pass empty search results as a string
+              namePart: searchQuery,
+              noResults: true, // Add a flag indicating no results found
+            },
+          });
+        }
       } else if (searchType === 'genre') {
         // Check if required fields are filled
         if (qgenre && minrating) {
@@ -52,31 +81,67 @@ const Search = () => {
             qgenre,
             minrating,
           };
-  
-          // Add optional fields if they are filled
           if (yrFrom) queryParams.yrFrom = yrFrom;
           if (yrTo) queryParams.yrTo = yrTo;
+          const additionalFields = Object.keys(queryParams).length - 2; // Subtracting the count of required fields
+          console.log('Query Parameters:', queryParams);
   
-          // Perform the search
-          response = await axios.get('http://localhost:9876/ntuaflix_api/bygenres', {
-            params: queryParams,
-          });
-          console.log('Search response:', response.data);
-          setSearchResults(response.data.data);
-          router.push({
-            pathname: '/search-genre',
-            query: queryParams,
-          });
+          if (additionalFields > 4) {
+            console.log('Please fill out only the required and optional fields.');
+            return; // Stop execution or return an error message
+          }
+  
+          try {
+            response = await axios.get('http://localhost:9876/ntuaflix_api/bygenres', {
+              params: queryParams,
+            });
+            console.log('Search response:', response.data);
+            setSearchResults(response.data.data);
+  
+            if (response.data.data.length === 0) {
+              // Redirect to the search-genre page with a message indicating no movies were found
+              router.push({
+                pathname: '/search-genre',
+                query: { ...queryParams, message: 'No movies were found.' },
+              });
+            } else {
+              // Redirect to the search-genre page without a message
+              router.push({
+                pathname: '/search-genre',
+                query: queryParams,
+              });
+            }
+          } catch (error) {
+            console.error('Error searching by genre:', error.message);
+            // Handle the error case for genre search
+            setSearchResults([]); // Set empty search results
+            router.push({
+              pathname: '/search-genre',
+              query: {
+                ...queryParams,
+                searchResults: '[]', // Pass empty search results as a string
+                message: 'An error occurred while searching.', // Add an error message
+              },
+            });
+          }
         } else {
           console.log('Please fill out required fields: Genre and Minimum Rating');
         }
       }
     } catch (error) {
-      console.error('Error searching:', error.message);
+      console.error('Search error:', error);
+      // Handle the error case
+      setSearchResults([]); // Set empty search results
+      router.push({
+        pathname: '/search-results',
+        query: {
+          searchResults: '[]', // Pass empty search results as a string
+          titlePart: searchQuery,
+          noResults: true, // Add a flag indicating no results found
+        },
+      });
     }
   };
-  
-  
   
     return (
       <div className="home-container">
@@ -169,10 +234,16 @@ const Search = () => {
         </div>     
       </div>
       <p className="tagline">Immerse Yourself in Cinema. Search, Explore, Enjoy with Ntuaflix!</p>
+      <p className="tagline">See the Top 10 rated movies <Link href="/toprated" style={{ textDecoration: 'none' }}>
+    <strong style={{ color: 'black' }}>here</strong>
+  </Link></p>
       <div className="additional-content">
         <img src="/images/myImage.jpg" className="additional-image" />
       </div>
       <style jsx>{`
+      .tagline {
+        color: black; /* or any color you prefer */
+      }
         .select {
           padding: 12px;
           width: 100px;

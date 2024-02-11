@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
 
 const ActorDetails2 = () => {
   const router = useRouter();
@@ -56,13 +57,22 @@ const ActorDetails2 = () => {
     }
   };
 
+  const handleSearchClick = () => {
+    // Navigate to the /new page
+    router.push('/new');
+  };
 
   return (
     <div className="home-container">
       <div className="header">
-      <Link href="/new" style={{ textDecoration: 'none' }}>
+      <div className="search-icon" onClick={handleSearchClick}>
+        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
+      </div>
+      <div className="logo-container">
+        <Link href="/new" style={{ textDecoration: 'none' }}>
           <h1 className="title">Ntuaflix</h1>
         </Link>
+      </div>
         <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
             <div className="login-button">Login</div>

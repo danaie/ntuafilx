@@ -126,3 +126,11 @@ button:hover {
 .login-button:hover {
   background-color: #0056b3;
 }
+.logo-container {
+  flex: 1; /* Take remaining space */
+  text-align: center; /* Center align */
+  margin-left: 75px;
+}
+.search-icon {
+  margin-left: 100px; /* Add margin between search icon and logo */
+}

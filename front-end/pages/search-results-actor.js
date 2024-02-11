@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
+
 
 const SearchResultsPage = () => {
   const router = useRouter();
@@ -22,7 +24,10 @@ const SearchResultsPage = () => {
       console.error('Error fetching movie data:', error);
     }
   };
-
+  const handleSearchClick = () => {
+    // Navigate to the /new page
+    router.push('/new');
+  };
   const results = searchResults ? JSON.parse(searchResults) : [];
 
   /*return (
@@ -44,9 +49,14 @@ const SearchResultsPage = () => {
   return (
     <div className="home-container">
         <div className="header">
+        <div className="search-icon" onClick={handleSearchClick}>
+        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
+      </div>
+      <div className="logo-container">
         <Link href="/new" style={{ textDecoration: 'none' }}>
-            <h1 className="title">Ntuaflix</h1>
-          </Link>
+          <h1 className="title">Ntuaflix</h1>
+        </Link>
+      </div>
           <div className="auth-buttons">
             <Link href="/login" style={{ textDecoration: 'none' }}>
               <div className="login-button">Login</div>
@@ -82,13 +92,17 @@ const SearchResultsPage = () => {
         </div>
       </li>
     ))
-  ) : (
-    <p>No principal with this name</p>
+  ) :  (
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <p>No principal found with this name '{namePart}'</p>
+  </div>
   )}
-  </ul>
-  
+  </ul> 
    </div>
         <style jsx>{`
+        .no-results-message {
+          text-align: center;
+        }
         .movie-container {
           width: 225px;
           height: 320px; /* Adjust height as needed */
