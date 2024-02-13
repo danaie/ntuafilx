@@ -1,18 +1,8 @@
-// Watchlist Page 
-
-/*Info: available from home page when user is logged in */
-// Link: 
-//
-
-
-//search: 
-// http://localhost:3000/homepagewhenloggedin
-
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-
-
-// ... (your existing imports)
+import Link from 'next/link';
+import '../styles/globalstyles.css';
 
 const Watchlist = () => {
   const [watchlist, setWatchlist] = useState([]);
@@ -49,10 +39,23 @@ const Watchlist = () => {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('accessToken');
+    router.push('/new'); // Navigate to the 'new.js' page on logout
+  };
+
   return (
     <div className="home-container">
       <div className="header" style={{ backgroundColor: '#add8e6', padding: '1rem', width: '100%', margin: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        {/* ... */}
+        <h1 className="title">Ntuaflix</h1>
+        <div className="auth-buttons">
+          <button className="btn btn-secondary profile-button" onClick={() => router.push('/profile')}>
+            Profile
+          </button>
+          <button className="btn btn-secondary" onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
       </div>
       <div className="main-content">
         <h2>My Watchlist</h2>
