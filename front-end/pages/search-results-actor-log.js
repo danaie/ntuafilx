@@ -14,12 +14,12 @@ const SearchResultsPage = () => {
     try {
       let response;
       response = await axios.get(`http://localhost:9876/ntuaflix_api/name/${nameID}`);
-      console.log('Movie data response:', response.data);
+      console.log('Movie data responsee:', response.data);
       //setMovieDetailsResults(response.data.data);
       router.push({
         pathname: '/actor-details2-log',
         query: { nameID: nameID }, // Pass titleID as a query parameter
-      });
+      }); 
     } catch (error) {
       console.error('Error fetching movie data:', error);
     }
