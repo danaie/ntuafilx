@@ -39,7 +39,7 @@ const Login = () => {
       localStorage.setItem('userID', userID); // You can use token instead if you prefer
       
       // Redirect to homepage with user ID in the URL
-      router.push(`/homepagewhenloggedin?userID=${userID}`);
+      router.push(`/homepagewhenloggedin2?userID=${userID}`);
         console.log('Login successful for user');
       } else if (response.status === 400) {
         // Server returns a 400 status (Bad Request), indicating invalid credentials
