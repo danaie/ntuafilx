@@ -4,7 +4,7 @@ exports.getTitles = (req, res, next) => {
     const q = 'SELECT originalTitle, titleID, image FROM title';
     pool.query(q, (error, results, fields) => {
         if (error) {
-            console.error('Error executing SELECT query:', error);
+            console.log('Error executing SELECT query:', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -60,6 +60,7 @@ const getTitleObjectById = (titleID) => {
 
                                 resolve({
                                     TitleObject: {
+                                        titleID : titleID,
                                         titleInfo: result1,
                                         titleAKAlist: result2,
                                         titlePrincipalsList: result3,
@@ -241,7 +242,7 @@ exports.getNameById = (req, res) => {
                 category: title.category
           }))
         }));
-        res.status(200).json({success: 1,data:personData[0]})
+        res.status(200).json({success: 1,nameObject:personData[0]})
       });    
 };
 
