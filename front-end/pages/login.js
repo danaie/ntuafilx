@@ -33,13 +33,13 @@ const Login = () => {
       if (response.ok) {
         // Server returns OK status (e.g., 200)
         const responseData = await response.json();
-        const { token, userID } = responseData; // Assuming backend returns userID
+        const { token } = responseData; // Assuming backend returns userID
       
       // Store the user ID or token in localStorage
-      localStorage.setItem('userID', userID); // You can use token instead if you prefer
-      
+      localStorage.setItem('token', token); // You can use token instead if you prefer     
       // Redirect to homepage with user ID in the URL
-      router.push(`/homepagewhenloggedin2?userID=${userID}`);
+      router.push(`/homepagewhenloggedin?token=${token}`);
+      
         console.log('Login successful for user');
       } else if (response.status === 400) {
         // Server returns a 400 status (Bad Request), indicating invalid credentials

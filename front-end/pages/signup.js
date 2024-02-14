@@ -3,10 +3,19 @@ import { useState } from 'react';
 import { fetchData } from './api.js';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
+import { useRouter } from 'next/router';
+
 
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleSearchClick = () => {
+    // Navigate to the /new page
+    router.push('/new');
+  };
 
   const handleSignup = async () => {
     try {
@@ -21,7 +30,7 @@ const Signup = () => {
 
       if (response.ok) {
         // Handle successful signup (e.g., redirect to login page)
-        router.push('/login');
+        router.push('/homepagewhenloggedin2');
         console.log('Signup successful');
       } else if (response.status === 409) {
         // Server returns a 409 status (Conflict), indicating duplicate username
@@ -39,13 +48,14 @@ const Signup = () => {
   return (
     <div className="home-container">
       <div className="header">
+      <div className="search-icon" onClick={handleSearchClick}>
+        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
+      </div>
+      <div className="logo-container">
         <Link href="/new" style={{ textDecoration: 'none' }}>
-        <h1 className="title">Ntuaflix</h1>
+          <h1 className="title">Ntuaflix</h1>
         </Link>
-        <div className="search-bar">
-          <input type="text" placeholder="Search for movies: title, category, actor, or genre"/> 
-          <button>Search</button>
-        </div>
+      </div>
         <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
             <div className="login-button">Login</div>

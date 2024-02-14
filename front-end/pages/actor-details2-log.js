@@ -18,6 +18,17 @@ const ActorDetails2 = () => {
     }
   }, [nameID]);
 
+  const handleLogout = async () => {
+    try {
+        await axios.get('http://localhost:9876/ntuaflix_api/logout');
+        localStorage.removeItem('accessToken');
+        router.push('/new');
+    } catch (error) {
+        console.error('Logout failed:', error);
+        // Handle any error appropriately
+    }
+};
+
   const fetchActorDetails = async (nameID) => {
     try {
       const response = await axios.get(`http://localhost:9876/ntuaflix_api/name/${nameID}`);
@@ -49,7 +60,7 @@ const ActorDetails2 = () => {
       console.log('Movie data response:', response.data);
       //setMovieDetailsResults(response.data.data);
       router.push({
-        pathname: '/movie-details2',
+        pathname: '/movie-details2-log',
         query: { titleID: titleID }, // Pass titleID as a query parameter
       });
     } catch (error) {
@@ -59,7 +70,7 @@ const ActorDetails2 = () => {
 
   const handleSearchClick = () => {
     // Navigate to the /new page
-    router.push('/new');
+    router.push('/homepagewhenloggedin2');
   };
 
   return (
@@ -73,13 +84,13 @@ const ActorDetails2 = () => {
           <h1 className="title">Ntuaflix</h1>
         </Link>
       </div>
-        <div className="auth-buttons">
+      <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Login</div>
+            <div className="login-button">Watchlist</div>
           </Link>
-          <Link href="/signup" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Sign up</div>
-          </Link>
+          <div className="login-button" onClick={handleLogout}>
+      Logout
+    </div>
         </div>     
       </div>
       <div>
@@ -126,7 +137,7 @@ const ActorDetails2 = () => {
 
       {!actorKnownMovies || actorKnownMovies.length === 0 && (
                 <div style={{ textAlign: 'center' }}>
-                <p></p> </div>
+                <p>No known movies for this actor.</p> </div>
       )}
     </div>
   );

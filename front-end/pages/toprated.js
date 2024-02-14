@@ -78,6 +78,7 @@ const SearchResultsPage = () => {
                     <div>No Image Available</div>
                   )}
                 </div>
+                <div className="movie-rating">Rating: {movie.averageRating}</div> {/* Display the rating */}
               </div>
             </li>
           ))}
