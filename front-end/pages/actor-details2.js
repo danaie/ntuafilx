@@ -126,7 +126,7 @@ const ActorDetails2 = () => {
 
       {!actorKnownMovies || actorKnownMovies.length === 0 && (
                 <div style={{ textAlign: 'center' }}>
-                <p></p> </div>
+                <p>No known movies for this actor.</p> </div>
       )}
     </div>
   );
