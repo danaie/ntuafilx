@@ -10,6 +10,7 @@ const ActorDetails2 = () => {
   const { nameID } = router.query;
   const [actorData, setActorData] = useState(null);
   const [actorKnownMovies, setActorKnownMovies] = useState(null);
+  const [loading, setLoading] = useState(true); // State to track loading state
 
   useEffect(() => {
     if (nameID) {
@@ -18,15 +19,33 @@ const ActorDetails2 = () => {
     }
   }, [nameID]);
 
+  const handleLogout = async () => {
+    try {
+        await axios.get('http://localhost:9876/ntuaflix_api/logout');
+        localStorage.removeItem(token);
+        router.push('/new');
+    } catch (error) {
+        console.error('Logout failed:', error);
+        // Handle any error appropriately
+    }
+};
+
   const fetchActorDetails = async (nameID) => {
     try {
       const response = await axios.get(`http://localhost:9876/ntuaflix_api/name/${nameID}`);
       console.log('Name data response:', response.data);
-      // Extract actor data from the response
-      const actorDetails = response.data.data;
-      setActorData(actorDetails);
+      // Check if the response contains a 'nameObject' property
+      if (response.data.success && response.data.nameObject) {
+        const actorDetails = response.data.nameObject;
+        setActorData(actorDetails);
+        setLoading(false); // Set loading state to false after fetching data
+      } else {
+        console.error('Error fetching actor data:', response.data); // Log the response for debugging
+        setLoading(false); // Ensure loading state is set to false in case of error
+      }
     } catch (error) {
       console.error('Error fetching actor data:', error);
+      setLoading(false); // Ensure loading state is set to false in case of error
     }
   };
 
@@ -49,7 +68,7 @@ const ActorDetails2 = () => {
       console.log('Movie data response:', response.data);
       //setMovieDetailsResults(response.data.data);
       router.push({
-        pathname: '/movie-details2',
+        pathname: '/movie-details2-log',
         query: { titleID: titleID }, // Pass titleID as a query parameter
       });
     } catch (error) {
@@ -59,52 +78,56 @@ const ActorDetails2 = () => {
 
   const handleSearchClick = () => {
     // Navigate to the /new page
-    router.push('/new');
+    router.push('/homepagewhenloggedin2');
   };
 
   return (
     <div className="home-container">
       <div className="header">
-      <div className="search-icon" onClick={handleSearchClick}>
-        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
-      </div>
-      <div className="logo-container">
-        <Link href="/new" style={{ textDecoration: 'none' }}>
-          <h1 className="title">Ntuaflix</h1>
-        </Link>
-      </div>
+        <div className="search-icon" onClick={handleSearchClick}>
+          <FaSearch style={{ fontSize: '26px' }} />
+        </div>
+        <div className="logo-container">
+          <Link href="/homepagewhenloggedin2" style={{ textDecoration: 'none' }}>
+            <h1 className="title">Ntuaflix</h1>
+          </Link>
+        </div>
         <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Login</div>
+            <div className="login-button">Watchlist</div>
           </Link>
-          <Link href="/signup" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Sign up</div>
-          </Link>
-        </div>     
+          <div className="login-button" onClick={handleLogout}>
+      Logout
+    </div>
+        </div>  
       </div>
       <div>
-      {actorData && (
-        <div>
-          <div style={{ textAlign: 'center' }}>
-          {actorData.image ? (
-              <img
-                src={actorData.image.replace('{width_variable}', 'w200')} // Adjusted width to fit the box
-                alt={actorData.primaryName}
-                style={{ width: '200px', height: '88%', objectFit: 'cover' }} // Set the desired width here
-              />
-            ) : (
-              <div>No Image Available</div>
-            )}
-            <p><strong>Name:</strong> {actorData.primaryName}</p>
-            <p><strong>Birth Year:</strong> {actorData.birthYear}</p>
-            {actorData.deathYear && <p><strong>Death Year:</strong> {actorData.deathYear}</p>}
-            <p><strong>Primary Profession:</strong> {actorData.primaryProfession}</p>
+        {loading ? (
+          <p>Loading...</p>
+        ) : actorData ? (
+          <div>
+            <div style={{ textAlign: 'center' }}>
+              {actorData.image ? (
+                <img
+                  src={actorData.image.replace('{width_variable}', 'w200')}
+                  alt={actorData.primaryName}
+                  style={{ width: '200px', height: '88%', objectFit: 'cover' }}
+                />
+              ) : (
+                <div>No Image Available</div>
+              )}
+              <p><strong>Name:</strong> {actorData.primaryName}</p>
+              <p><strong>Birth Year:</strong> {actorData.birthYear}</p>
+              {actorData.deathYear && <p><strong>Death Year:</strong> {actorData.deathYear}</p>}
+              <p><strong>Primary Profession:</strong> {actorData.primaryProfession}</p>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-    {actorKnownMovies && actorKnownMovies.length > 0 && (
-      <div style={{ textAlign: 'center', marginTop: '30px' }}> {/* Added marginTop style here */}          <h3>Known For Movies:</h3>
+        ) : (
+          <p>No actor data available</p>
+        )}
+      </div>
+      {actorKnownMovies && actorKnownMovies.length > 0 && (
+      <div style={{ textAlign: 'center', marginTop: '30px' }}>      <h3>Known For Movies:</h3>
           <ul style={{ listStyleType: 'none', padding: 0 }}>
   {actorKnownMovies.map((movie, index) => (
     <li key={index} onClick={() => handleMovieClick(movie.titleID)} style={{ marginBottom: '10px', cursor: 'pointer' }}>
@@ -127,8 +150,7 @@ const ActorDetails2 = () => {
       {!actorKnownMovies || actorKnownMovies.length === 0 && (
                 <div style={{ textAlign: 'center' }}>
                 <p>No known movies for this actor.</p> </div>
-      )}
-    </div>
+      )}    </div>
   );
 };
 

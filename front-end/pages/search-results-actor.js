@@ -17,16 +17,17 @@ const SearchResultsPage = () => {
       console.log('Movie data response:', response.data);
       //setMovieDetailsResults(response.data.data);
       router.push({
-        pathname: '/actor-details2',
+        pathname: '/actor-details',
         query: { nameID: nameID }, // Pass titleID as a query parameter
       });
     } catch (error) {
       console.error('Error fetching movie data:', error);
     }
   };
+  
   const handleSearchClick = () => {
     // Navigate to the /new page
-    router.push('/new');
+    router.push('/homepageloggedin2');
   };
   const results = searchResults ? JSON.parse(searchResults) : [];
 

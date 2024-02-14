@@ -17,7 +17,7 @@ const SearchResultsPage = () => {
       console.log('Movie data responsee:', response.data);
       //setMovieDetailsResults(response.data.data);
       router.push({
-        pathname: '/actor-details2-log',
+        pathname: '/actor-details-log',
         query: { nameID: nameID }, // Pass titleID as a query parameter
       }); 
     } catch (error) {

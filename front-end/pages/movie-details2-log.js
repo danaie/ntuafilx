@@ -16,6 +16,17 @@ const MovieDetails2 = () => {
     }
   }, [titleID]);
 
+  const handleLogout = async () => {
+    try {
+        await axios.get('http://localhost:9876/ntuaflix_api/logout');
+        localStorage.removeItem(token);
+        router.push('/new');
+    } catch (error) {
+        console.error('Logout failed:', error);
+        // Handle any error appropriately
+    }
+};
+
   const fetchMovieDetails = async (titleID) => {
     try {
       const response = await axios.get(`http://localhost:9876/ntuaflix_api/title/${titleID}`);
@@ -30,7 +41,7 @@ const MovieDetails2 = () => {
   const handlePrincipalClick = async (basicsID) => {
     try {
       router.push({
-        pathname: '/actor-details',
+        pathname: '/actor-details-log',
         query: { nameID: basicsID },
       });
     } catch (error) {
@@ -39,7 +50,7 @@ const MovieDetails2 = () => {
   };
   const handleSearchClick = () => {
     // Navigate to the /new page
-    router.push('/new');
+    router.push('/homepagewhenloggedin2');
   };
   if (!movieData) {
     return <div>Loading...</div>;
@@ -51,18 +62,18 @@ const MovieDetails2 = () => {
         <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
       </div>
       <div className="logo-container">
-        <Link href="/new" style={{ textDecoration: 'none' }}>
+        <Link href="/homepagewhenloggedin2" style={{ textDecoration: 'none' }}>
           <h1 className="title">Ntuaflix</h1>
         </Link>
       </div>
-        <div className="auth-buttons">
+      <div className="auth-buttons">
           <Link href="/login" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Login</div>
+            <div className="login-button">Watchlist</div>
           </Link>
-          <Link href="/signup" style={{ textDecoration: 'none' }}>
-            <div className="login-button">Sign up</div>
-          </Link>
-        </div>     
+          <div className="login-button" onClick={handleLogout}>
+      Logout
+    </div>
+        </div> 
       </div>
     <div style={{ textAlign: 'center' }}>
     <h2>{movieData.titleInfo && movieData.titleInfo[0].originalTitle}</h2>
