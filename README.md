@@ -27,11 +27,11 @@ The backend folder contains:
 
 ### **To start the backend:**
 
-First you need to write *npm install* if you didn't already. To start use the command *npm start*.
+First you need to write `npm install` if you didn't already. To start use the command `npm start`.
 
 ### **To test the backend:**
 
-To run the tests use *npm test*, or import the postman collection to postman and run it.
+To run the tests use `npm test`, or import the postman collection to postman and run it.
 
 ## Cli-client
 
@@ -58,11 +58,11 @@ Cli-client commands:
 
 ### **To run any commands in the cli-client:**
 
-First you need to write *npm install* if you didn't already. Next write *npm install -g*. Then you can use the commands that are been specified if you write **se2314**.
+First you need to write `npm install` if you didn't already. Next write `npm install -g`. Then you can use the commands that are been specified if you write **se2314**.
 
 ### **To test the cli-client (constructURL):**
 
-To run the tests use *npm test*.
+To run the tests use `npm test`.
 
 ## Front-end
 
@@ -70,4 +70,4 @@ To run the tests use *npm test*.
 
 ### **To run the front-end:**
 
-First you need to write *npm install* if you didn't already. To start the front-end use *npm start*.
+First you need to write `npm install` if you didn't already. To start the front-end use `npm start`.
