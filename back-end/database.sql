@@ -33,7 +33,8 @@ create table watchlist (
 	userID int,
     titleID varchar(10),
     foreign key (userID)
-		references user (userID),
+		references user (userID)
+        on delete cascade,
 	foreign key (titleID)
 		references title (titleID),
         constraint unique (userID, titleID)
@@ -121,7 +122,9 @@ BEGIN
     DECLARE tableCursor CURSOR FOR
         SELECT table_name
         FROM information_schema.tables
-        WHERE table_schema = 'imbd';
+        WHERE table_schema = 'imbd'
+        AND table_name != 'user'
+        AND table_type = 'BASE TABLE';
 
     -- Declare continue handler to exit loop when no more tables are found
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;

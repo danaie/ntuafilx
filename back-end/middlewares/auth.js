@@ -3,9 +3,7 @@ const { pool } = require('../utils/database');
 const {secret_key} = require('./createjwt');
 
 exports.authAdmin = (req,res,next) => { 
-    var token = req.cookies['X-OBSERVATORY-AUTH'];
-    if (!token)
-        token = req.header('X-OBSERVATORY-AUTH')
+    const token = req.header('X-OBSERVATORY-AUTH')
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
             if (err || decoded.isAdmin == 0){
@@ -23,7 +21,7 @@ exports.authAdmin = (req,res,next) => {
 }
 
 exports.authRightUser = (req,res,next) =>{
-    const token = req.cookies['X-OBSERVATORY-AUTH'];
+    const token = req.header('X-OBSERVATORY-AUTH');
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
             if (err){
@@ -66,9 +64,7 @@ exports.authRightUser = (req,res,next) =>{
 
 
 exports.authUser = (req,res,next) => { 
-    var token = req.cookies['X-OBSERVATORY-AUTH'];
-    if (!token)
-        token = req.header('X-OBSERVATORY-AUTH')
+    const token = req.header('X-OBSERVATORY-AUTH');
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
             if (err){
