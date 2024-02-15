@@ -75,4 +75,5 @@ The frontend folder contains:
 
 ### **To run the front-end:**
 
-First you need to write `npm install` if you didn't already. To start the front-end use `npm start`.
+You have to make sure that your current directory is `softeng23-14/front-end`.
+First you need to write `npm install` if you didn't already. To start the front-end use `npm run dev`.
