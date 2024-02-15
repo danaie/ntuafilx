@@ -1,6 +1,6 @@
 const { pool } = require('../utils/database');
 const bcrypt = require('bcryptjs');
-const {max_age_in_sec, createjwt } = require('../middlewares/createjwt');
+const { createjwt }  = require('../middlewares/createjwt');
 
 exports.createUser = (req,res,next) => {
     const username = req.params.username;
@@ -55,8 +55,10 @@ exports.createAdmin = (req,res,next) => {
                         connection.release();
                         if (error) {
                             console.log(error)
-                            if (error.code = 'ER_DUP_ENTRY')
+                            if (error.code == 'ER_DUP_ENTRY')
                                 return res.status(400).json({error: 'Username already used'})
+                            if (error.code == 'ER_DATA_TOO_LONG')
+                                return res.status(400).json({error:"Username or password too long"});
                             return res.status(500).json({ error: error});
                         };
                         console.log(result)
@@ -65,6 +67,30 @@ exports.createAdmin = (req,res,next) => {
                 }
             });
         });
+    });
+}
+
+exports.deleteAdmin = (req,res,next) => {
+    const username = req.params.username;
+    const query = 'delete from user where username = ?';
+    pool.getConnection((err,connection) => {
+        if (err) {
+            console.log(err)
+            return res.status(500).json({ error: err});
+        }
+        else {
+            connection.query(query, username, (error,result) => {
+                connection.release();
+                if (error) {
+                    console.log(error)
+                    return res.status(500).json({ error: error});
+                };
+                if (result.affectedRows === 0)
+                    return res.status(400).json({error:"No user with this username"})
+                else
+                    return res.status(200).json({status: "OK", message: `User ${username} deleted`});
+                });
+        }
     });
 }
 
@@ -96,7 +122,7 @@ exports.login = (req,res,next) => {
                         return res.status(400).json({error:"Invalid username or password"})
                         else {
                             const token = createjwt(userID, isAdmin);
-                            res.cookie('X-OBSERVATORY-AUTH',token, {httpOnly:true, maxAge: max_age_in_sec*1000});
+                            //res.cookie('X-OBSERVATORY-AUTH',token, {httpOnly:true, maxAge: max_age_in_sec*1000});
                             return res.status(200).json({token:token});
                         }
                     });
@@ -107,7 +133,7 @@ exports.login = (req,res,next) => {
 };
 
 exports.logout = (req,res,next) => {
-    res.cookie('X-OBSERVATORY-AUTH','', {maxAge: 1});
+    //res.cookie('X-OBSERVATORY-AUTH','', {maxAge: 1});
     res.status(200).json({status:'OK',message:'Logout successful'})
 }
 

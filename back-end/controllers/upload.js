@@ -6,7 +6,7 @@ const upload_tsv = require('../middlewares/upload_tsv')
 exports.postTitlebasics = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -14,7 +14,7 @@ exports.postTitlebasics = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query = "insert ignore into title (titleID, titleType, primaryTitle, originalTitle, isAdult, startYear, endYear, runtimeMinutes,genres, image) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -26,7 +26,7 @@ exports.postTitlebasics = (req, res, next) => {
 exports.postTitleakas = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -34,7 +34,7 @@ exports.postTitleakas = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query ="insert ignore into titleAKA (titleID, ordering, title, region, language, types, atributes, isOriginal) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -46,7 +46,7 @@ exports.postTitleakas = (req, res, next) => {
 exports.postTitlecrew = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -54,7 +54,7 @@ exports.postTitlecrew = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query ="insert ignore into crew (titleID, directors, writers) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -66,7 +66,7 @@ exports.postTitlecrew = (req, res, next) => {
 exports.postTitleepisode = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -74,7 +74,7 @@ exports.postTitleepisode = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query ="insert ignore into episode (episodeID, titleID, season, episodeNumber) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -86,7 +86,7 @@ exports.postTitleepisode = (req, res, next) => {
 exports.postTitleprincipals = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -94,7 +94,7 @@ exports.postTitleprincipals = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query = "insert ignore into principals (titleID, ordering, basicsID, category, job, characters, image) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -106,7 +106,7 @@ exports.postTitleprincipals = (req, res, next) => {
 exports.postTitleratings = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -114,7 +114,7 @@ exports.postTitleratings = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query = "insert ignore into ratings (titleID, averageRating, numVotes) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{
@@ -126,7 +126,7 @@ exports.postTitleratings = (req, res, next) => {
 exports.postNamebasics  = (req, res, next) => {
     const uploadedFile = req.file;
     if (!uploadedFile) {
-        return res.status(400).send('No file uploaded.');
+        return res.status(400).json({error:'No file uploaded.'});
     }
     if (path.extname(req.file.filename) != '.tsv') {
         fs.unlink(__dirname+'/../uploads/' + req.file.filename, (err) => {
@@ -134,7 +134,7 @@ exports.postNamebasics  = (req, res, next) => {
                 console.error(err);
             }
         });
-        return res.status(400).send('File must be a tsv');
+        return res.status(400).json({error:'File must be a tsv'});
     }
     const query = "insert ignore into nameBasics (basicsID, primaryName, birthYear, deathYear, primaryProfession, knowForTitles, image) values ?"
     upload_tsv(__dirname+'/../uploads/' + req.file.filename,query,(error,result) =>{

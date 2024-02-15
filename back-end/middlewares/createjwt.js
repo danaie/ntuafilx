@@ -6,8 +6,8 @@ const secret_key = 'mhnprospathisiskandenyparxeikamiaperiptoshnabreisautotokleid
 const createjwt = (id, isAdmin) => {
     return jwt.sign(
         { id, isAdmin },
-        secret_key,
-        { expiresIn:max_age_in_sec })
+        secret_key
+        )
 }
 
-module.exports = { max_age_in_sec, createjwt , secret_key};
+module.exports = { createjwt , secret_key};
