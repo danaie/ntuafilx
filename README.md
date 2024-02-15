@@ -1,6 +1,6 @@
 # Software Engineering
 
-<p align = "center">This project was made for the course of Software engineering NTUA. We were asked to make a system with movies details</p>
+This project was made for the course of Software engineering NTUA. We were asked to make a system with movies details
 
 ## Technology Stack
 
@@ -17,6 +17,13 @@ The backend folder contains:
 * routes: All routes that are being used in the project. Each route starts with http://localhost:9876/ntuaflix_api/{service}, where {service} is each file in routes folder. Each service has certain endpoints.
 * test: Contains the tests that were written in order to check all of our endpoints. Jest and postman scripts were used for the testing.
 * uploads: In this folder all uploads are been uploaded.
+
+## How to set up backend
+1. Make sure your current directory is `softeng23-14/back-end`
+2. Create .env under repo's `backend` folder with your credentials for:
+    - `DB_HOST` 
+    - `DB_USER`
+    - `DB_PASS`
 
 ### **To start the backend:**
 
