@@ -93,7 +93,7 @@ const ActorDetails2 = () => {
           </Link>
         </div>
         <div className="auth-buttons">
-          <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Link href="/watchlist" style={{ textDecoration: 'none' }}>
             <div className="login-button">Watchlist</div>
           </Link>
           <div className="login-button" onClick={handleLogout}>

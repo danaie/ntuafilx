@@ -1,12 +1,16 @@
 // components/Signup.js
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import { fetchData } from './api.js';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
+import { FaSearch } from 'react-icons/fa';
+
 
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSignup = async () => {
     try {
@@ -36,21 +40,26 @@ const Signup = () => {
     }
   };
 
+  const handleSearchClick = () => {
+    router.push('/new');
+  };
+
   return (
     <div className="home-container">
-      <div className="header">
+       <div className="header">
+        <div className="search-icon" onClick={handleSearchClick}>
+        <FaSearch style={{ fontSize: '26px' }} /> {/* Use the imported search icon component */}
+      </div>
+      <div className="logo-container">
         <Link href="/new" style={{ textDecoration: 'none' }}>
-        <h1 className="title">Ntuaflix</h1>
+          <h1 className="title">Ntuaflix</h1>
         </Link>
-        <div className="search-bar">
-          <input type="text" placeholder="Search for movies: title, category, actor, or genre"/> 
-          <button>Search</button>
-        </div>
+      </div>
         <div className="auth-buttons">
-          <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Link href="/login" passHref  style={{ textDecoration: 'none' }}>
             <div className="login-button">Login</div>
           </Link>
-          <Link href="/signup" style={{ textDecoration: 'none' }}>
+          <Link href="/signup" passHref  style={{ textDecoration: 'none' }}>
             <div className="login-button">Sign up</div>
           </Link>
         </div>
@@ -64,6 +73,13 @@ const Signup = () => {
             id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            style={{
+              padding: '10px',
+              width: '280px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              marginRight: '10px'
+            }}
           />
 
           <label htmlFor="password">Password:</label>
@@ -72,6 +88,13 @@ const Signup = () => {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            style={{
+              padding: '10px',
+              width: '280px',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              marginRight: '10px'
+            }}
           />
 
           <div className="button-container">
@@ -91,10 +114,10 @@ const Signup = () => {
         border-radius: 5px;
         margin-right: 10px;
       }
-        .login-form {
-          text-align: center;
-          margin-top: 20px;
-        }
+      .login-form {
+        text-align: center;
+        margin-top: 20px;
+      }
 
         .button-container {
           margin-top: 10px;

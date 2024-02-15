@@ -78,7 +78,7 @@ const SearchResultsPage = () => {
           </Link>
         </div>
         <div className="auth-buttons">
-          <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Link href="/watchlist" style={{ textDecoration: 'none' }}>
             <div className="login-button">Watchlist</div>
           </Link>
           <div className="login-button" onClick={handleLogout}>
@@ -88,9 +88,7 @@ const SearchResultsPage = () => {
         </div>
     <div>
     <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
-        Search Results for <span style={{ fontWeight: 'bold' }}>'{qgenre}'</span>
-      </h2>
-
+        Search Results for <span style={{ fontWeight: 'bold' }}>'{qgenre}'</span></h2>
       {errormessage && <p>{errormessage}</p>}
       <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
       {movieData && movieData.length > 0 ? (

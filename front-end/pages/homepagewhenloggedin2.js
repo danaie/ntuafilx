@@ -230,7 +230,7 @@ const Search = () => {
       </div>
     </div>
         <div className="auth-buttons">
-          <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Link href="/watchlist" style={{ textDecoration: 'none' }}>
             <div className="login-button">Watchlist</div>
           </Link>
           <Link href="/new" style={{ textDecoration: 'none' }}>
