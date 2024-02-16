@@ -4,10 +4,48 @@ import axios from 'axios';
 import Link from 'next/link';
 import '../styles/globalstyles.css';
 import { FaSearch } from 'react-icons/fa';
+import Watchlist from './watchlist'; // Import the Watchlist component
+
+
 
 const SearchResultsPage = () => {
   const router = useRouter();
   const { searchResults, titlePart } = router.query;
+
+  const handleAddToWatchlist = async (titleID) => {
+    try {
+      const token = localStorage.getItem('accessToken');
+  
+      // Check if the user is logged in (authenticated)
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        // You can redirect the user to the login page or display a login prompt.
+        // For example, you can use the router to navigate to the login page:
+        // router.push('/login');
+        return;
+      }
+  
+      const response = await axios.post(
+        `http://localhost:9876/ntuaflix_api/watchlist/${titleID}`,
+        null,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      console.log('Response from backend:', response.data);
+  
+      // Assuming the backend returns some data, you can log it to check for success or any additional information.
+      console.log(`Movie with titleID ${titleID} added to the watchlist`);
+  
+      fetchWatchlist(); // Fetch updated watchlist after adding a movie
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+    }
+  };
+  
   
   const handleMovieClick = async (titleID) => {
     try {
@@ -64,39 +102,41 @@ const SearchResultsPage = () => {
         <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
           Search Results for <span style={{ fontWeight: 'bold' }}>'{titlePart}'</span>
         </h2>
-        {searchResults ? (
-          results.length > 0 ? (
-            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
-              {results.map((movie) => (
-               <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
-               <div className="movie-container" onClick={() => handleMovieClick(movie.titleID)}>
-                 <div className="movie-title">
-                   {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
-                 </div>
-                 <div className="movie-image">
-                   {movie.image ? (
-                     <img
-                       src={movie.image.replace('{width_variable}', 'w200')}
-                       alt={movie.originalTitle}
-                       style={{ width: '200px', height: '82%', objectFit: 'cover' }}
-                     />
-                   ) : (
-                     <div>No Image Available</div>
-                   )}
-                 </div>
-                 <button onClick={(e) => { e.stopPropagation(); addToWatchlist(movie.titleID); }} className="add-to-watchlist-button">
-    Add to Watchlist
-</button>
-               </div>
-             </li>
-              ))}
-            </ul>
-          ) : (
-            <p style={{ textAlign: 'center' }}>No movies found with the title '{titlePart}'</p>
-          )
-        ) : (
-          <p style={{ textAlign: 'center' }}>Invalid search query</p>
-        )}
+        {results.length > 0 ? (
+  <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
+    {results.map((movie) => (
+      <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
+        <div className="movie-container">
+          <div className="movie-title">
+            {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
+          </div>
+          <div className="movie-image">
+            {movie.image ? (
+              <img
+                src={movie.image.replace('{width_variable}', 'w200')}
+                alt={movie.originalTitle}
+                style={{ width: '200px', height: '82%', objectFit: 'cover' }}
+              />
+            ) : (
+              <div>No Image Available</div>
+            )}
+          </div>
+          {/* Add the "Add to Watchlist" button here */}
+          <button onClick={() => handleAddToWatchlist(movie.titleID)} className="add-to-watchlist-button">
+            Add to Watchlist
+          </button>
+        </div>
+      </li>
+    ))}
+  </ul>
+) : (
+  results.length === 0 ? (
+    <p style={{ textAlign: 'center' }}>No movies found with the title '{titlePart}'</p>
+  ) : (
+    <p style={{ textAlign: 'center' }}>Invalid search query</p>
+  )
+)}
+
       </div>
       <style jsx>{`
       .add-to-watchlist-button {

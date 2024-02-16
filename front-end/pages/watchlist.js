@@ -44,6 +44,16 @@ const Watchlist = () => {
     router.push('/new'); // Navigate to the 'new.js' page on logout
   };
 
+  const handleAddToWatchlist = async (titleID) => {
+    try {
+      await axios.post(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`);
+      fetchWatchlist();
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+      // Μπορείτε να προσθέσετε κάποια λειτουργία αντιμετώπισης σφαλμάτων εδώ
+    }
+  };
+
   return (
     <div className="home-container">
       <div className="header" style={{ backgroundColor: '#add8e6', padding: '1rem', width: '100%', margin: '0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
