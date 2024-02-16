@@ -9,19 +9,31 @@ const Watchlist = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Fetch the user's watchlist when the component mounts
     fetchWatchlist();
   }, []);
 
   const fetchWatchlist = async () => {
     try {
-      const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist');
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        // Handle the case where the user is not authenticated
+        return;
+      }
+  
+      const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
       const data = await response.json();
       setWatchlist(data); // Make sure data is an array of objects
     } catch (error) {
       console.error('Error fetching watchlist:', error);
     }
   };
+  
 
   const removeFromWatchlist = async (titleID) => {
     try {
@@ -32,7 +44,6 @@ const Watchlist = () => {
         },
       });
 
-      // Refresh watchlist data after removing a movie
       fetchWatchlist();
     } catch (error) {
       console.error('Error removing from watchlist:', error);
@@ -44,13 +55,23 @@ const Watchlist = () => {
     router.push('/new'); // Navigate to the 'new.js' page on logout
   };
 
-  const handleAddToWatchlist = async (titleID) => {
+  const addToWatchlist = async (titleID) => {
     try {
-      await axios.post(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`);
-      fetchWatchlist();
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        return;
+      }
+
+      await axios.post(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      fetchWatchlist(); // Refresh watchlist data after adding a movie
     } catch (error) {
       console.error('Error adding to watchlist:', error);
-      // Μπορείτε να προσθέσετε κάποια λειτουργία αντιμετώπισης σφαλμάτων εδώ
     }
   };
 

@@ -36,7 +36,7 @@ const Login = () => {
         const { token, userID } = responseData; // Assuming backend returns userID
       
       // Store the user ID or token in localStorage
-      localStorage.setItem('userID', userID); // You can use token instead if you prefer
+      localStorage.setItem('token', userID); // You can use token instead if you prefer
       
       // Redirect to homepage with user ID in the URL
       router.push(`/homepagewhenloggedin2?userID=${userID}`);
