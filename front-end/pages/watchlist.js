@@ -146,7 +146,10 @@ const Watchlist = () => {
                 <div>No Image Available</div>
               )}
             </div>
-            <button onClick={() => removeFromWatchlist(movie.titleID)}>Remove</button>
+            <button onClick={(event) => {
+              event.stopPropagation();
+              removeFromWatchlist(movie.titleID);
+            }}>Remove</button>
           </div>
         </li>
       ))}

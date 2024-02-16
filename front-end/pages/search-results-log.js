@@ -129,7 +129,7 @@ const SearchResultsPage = () => {
           <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
             {results.map((movie) => (
               <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
-                <div className="movie-container">
+               <div className="movie-container" onClick={() => handleMovieClick(movie.titleID)}>
                   <div className="movie-title">
                     {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
                   </div>
