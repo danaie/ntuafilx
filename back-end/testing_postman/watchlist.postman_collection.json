@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "010559ed-5fb0-47aa-bdfa-89ce3d3e3bf3",
+		"name": "watchlist",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32883384"
+	},
+	"item": [
+		{
+			"name": "add movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check status\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"OK\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9876/ntuaflix_api/watchlist/tt0000977",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9876",
+					"path": [
+						"ntuaflix_api",
+						"watchlist",
+						"tt0000977"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get watchilst",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var movie_schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"    \"data\": {",
+							"      \"type\": \"array\",",
+							"      \"items\": {",
+							"        \"type\": \"object\",",
+							"        \"properties\": {",
+							"          \"originalTitle\": {",
+							"            \"type\": \"string\"",
+							"          },",
+							"          \"titleID\": {",
+							"            \"type\": \"string\"",
+							"          },",
+							"          \"image\": {",
+							"            \"type\": [\"string\", \"null\"]",
+							"          }",
+							"        },",
+							"        \"required\": [\"originalTitle\", \"titleID\"]",
+							"      }",
+							"    }",
+							"  },",
+							"  \"required\": [\"data\"]",
+							"}",
+							"",
+							"pm.test('Correct json schema', function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(tv4.validate(jsonData, movie_schema)).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9876/ntuaflix_api/watchlist",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9876",
+					"path": [
+						"ntuaflix_api",
+						"watchlist"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "del movie",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check status\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.status).to.eql(\"OK\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9876/ntuaflix_api/watchlist/tt0000977",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9876",
+					"path": [
+						"ntuaflix_api",
+						"watchlist",
+						"tt0000977"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.request.headers.add(\"X-OBSERVATORY-AUTH: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaXNBZG1pbiI6MSwiaWF0IjoxNzA3OTg4ODEwfQ.JqIZHa4BURy1fjqPurLH8LpuAvgeqT8ijIrnVZ56XcQ\");"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
