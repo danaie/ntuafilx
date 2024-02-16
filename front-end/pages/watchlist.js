@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { FaSearch } from 'react-icons/fa';
 import '../styles/globalstyles.css';
 
 const Watchlist = () => {
@@ -14,19 +15,24 @@ const Watchlist = () => {
 
   const fetchWatchlist = async () => {
     try {
-      const token = localStorage.getItem('accessToken');
+      const token = localStorage.getItem('token');
       if (!token) {
         console.error('User not authenticated. Please log in.');
+        router.push('/login');
         // Handle the case where the user is not authenticated
         return;
       }
-  
+      console.log(token);
       const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          'X-OBSERVATORY-AUTH': token,
         },
       });
-  
+      if (response.status === 401) {
+        console.error('User not authenticated. Redirecting to login page.');
+        router.push('/login');
+        return;
+      }
       const data = await response.json();
       setWatchlist(data); // Make sure data is an array of objects
     } catch (error) {
@@ -73,6 +79,10 @@ const Watchlist = () => {
     } catch (error) {
       console.error('Error adding to watchlist:', error);
     }
+  };
+
+  const handleSearchClick = () => {
+    router.push('/homepagewhenloggedin2');
   };
 
   return (
