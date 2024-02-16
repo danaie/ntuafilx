@@ -3,14 +3,15 @@ const { pool } = require('../utils/database');
 const {secret_key} = require('./createjwt');
 
 exports.authAdmin = (req,res,next) => { 
-    const token = req.header('X-OBSERVATORY-AUTH')
+    const token = req.header('X-OBSERVATORY-AUTH');
+    console.log(token);
     if (token) {
         jwt.verify(token,secret_key, (err,decoded) => {
             if (err || decoded.isAdmin == 0){
                 return res.status(401).json({ error: 'Unauthorized' });
             }
             else {
-                //console.log(decoded);
+                console.log(decoded);
                 next();
             }
         })
