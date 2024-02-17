@@ -69,7 +69,7 @@ To run the tests use `npm test`.
 
 The frontend folder contains:
 
-* pages: We use this directory to streamline the routing process. Each file inside the pages directory corresponds to a route in our application. They start with http://localhost:3000/{page}, where {page} is the name of the page we want to access. The main page of our application starts with http://localhost:3000/new.
+* pages: We use this directory to streamline the routing process. Each file inside the pages directory corresponds to a route in our application. They start with http://localhost:3000/{page}, where {page} is the name of the page we want to access. To access the main page of our application, you should enter the following: http://localhost:3000/new, which {new} refers to the main page.
 * styles: This includes a file named "globalstyles.css" which contains the CSS we used for the style of our pages and we import them in every file in the pages directory.
 * public: Contains some images we used for our pages.
 
