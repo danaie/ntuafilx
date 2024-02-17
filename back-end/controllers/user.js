@@ -83,6 +83,7 @@ const getnameObjectById = (nameID) => {
         pool.query(query, [nameID], (error, results, fields) => {
             if (error) {
                 reject({ error: 'Error executing query' });
+            
             } else {
                 const personData = {
                     basicsID: null,
@@ -109,10 +110,11 @@ const getnameObjectById = (nameID) => {
                         });
                     });
                 }
-
-                resolve({ personData });
+            
+            resolve({ personData });
             }
-        });
+            },
+        );
     });
 };
 
@@ -120,7 +122,7 @@ exports.getTitleById = (req, res) => {
     const titleID = req.params.titleID;
     getTitleObjectById(titleID)
     .then((titleObject) => {
-        if (titleObject.status === 404) {
+        if (titleObject.body === 404) {
             return res.status(404).json(titleObject);
         }
         return res.status(200).json(titleObject);
@@ -133,6 +135,12 @@ exports.getTitleById = (req, res) => {
 
 exports.getSearchTitle = (req, res) => {
     const { titlePart } = req.query;
+    if (titlePart === null || titlePart === undefined) {
+        return res.status(400).json({
+            success: 0,
+            message: 'titlepart missing'
+        });
+    }
     const q = 'SELECT titleID FROM title WHERE originalTitle LIKE ?';
     pool.query(q, [`%${titlePart}%`], (error, searchresults, fields) => {
         if (error) {
@@ -143,7 +151,7 @@ exports.getSearchTitle = (req, res) => {
             });
         }
         if (searchresults.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: 0,
                 message: 'Movie not found'
             });
@@ -172,6 +180,14 @@ exports.getbyGendre =  (req, res, next) => {
     const { minrating } = req.query;
     const { yrFrom } = req.query;
     const { yrTo } = req.query;
+    
+    if (qgenre === null || minrating === null || qgenre === undefined || minrating === undefined) { 
+        return res.status(400).json({
+            success: 0,
+            message: 'qgenre and/or minrating missing'
+        });
+    }
+
     q = "SELECT titleID FROM (title INNER JOIN ratings USING (titleID)) WHERE genres LIKE ? AND averageRating >= ?";
     if (yrFrom != null && yrTo != null) { q = q + "AND startYear BETWEEN ? AND ?" }
     pool.query(q, [`%${qgenre}%`, minrating, yrFrom, yrTo], (error, searchresults, fields) => {
@@ -183,7 +199,7 @@ exports.getbyGendre =  (req, res, next) => {
             });
         }
         if (searchresults.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: 0,
                 message: 'Movie not found'
             });
@@ -242,12 +258,23 @@ exports.getNameById = (req, res) => {
                 category: title.category
           }))
         }));
-        res.status(200).json({success: 1,nameObject:personData[0]})
+        if (personData[0] === undefined) {return res.status(200).json({ "message" : "Name not found"}); }
+        else {
+        res.status(200).json({success: 1, nameObject:personData[0]})
+        }
       });    
 };
 
 exports.getSearchName = (req, res) => {
     const { namePart } = req.query;
+
+    if (namePart === null || namePart === undefined) {
+        return res.status(400).json({
+            success: 0,
+            message: 'namepart missing'
+        });
+    }
+
     const q = 'SELECT basicsID FROM nameBasics WHERE primaryName LIKE ?';
 
     pool.query(q, [`%${namePart}%`], (error, searchresults, fields) => {
@@ -260,7 +287,7 @@ exports.getSearchName = (req, res) => {
         }
 
         if (searchresults.length === 0) {
-            return res.status(404).json({
+            return res.status(200).json({
                 success: 0,
                 message: 'Names not found'
             });
@@ -276,7 +303,7 @@ exports.getSearchName = (req, res) => {
 
         Promise.all(promises)
             .then((nameObjects) => {
-                console.log("Search Results:", nameObjects);
+                //console.log("Search Results:", nameObjects);
                 // If you want to filter out objects with errors, you can use:
                 // const validNameObjects = nameObjects.filter(obj => !obj.error);
                 return res.status(200).json(nameObjects);
@@ -287,4 +314,3 @@ exports.getSearchName = (req, res) => {
             });
     });
 }
-
