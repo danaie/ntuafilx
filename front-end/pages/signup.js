@@ -10,6 +10,7 @@ import { FaSearch } from 'react-icons/fa';
 const Signup = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const router = useRouter();
 
   const handleSignup = async () => {
@@ -24,19 +25,29 @@ const Signup = () => {
       });
 
       if (response.ok) {
-        // Handle successful signup (e.g., redirect to login page)
-        router.push('/login');
-        console.log('Signup successful');
+        // Server returns OK status (e.g., 200)
+        const responseData = await response.json();
+        const { token } = responseData; // Assuming backend returns userID
+      
+      // Store the user ID or token in localStorage
+      localStorage.setItem('token', token); // You can use token instead if you prefer
+      console.log(token);
+      console.log(localStorage);
+      // Redirect to homepage with user ID in the URL
+      router.push(`/homepagewhenloggedin2`);
+        console.log('Signup successful for user');
       } else if (response.status === 409) {
         // Server returns a 409 status (Conflict), indicating duplicate username
         setErrorMessage('Username already exists. Please choose a different username.');
       } else {
         // Handle other error statuses
         console.error('Signup failed with status:', response.status);
+        setErrorMessage('An unexpected error occurred. Please try again later.');
       }
     } catch (error) {
       // Handle network or other errors
       console.error('Error during signup:', error);
+      setErrorMessage('An unexpected error occurred. Please try again later.');
     }
   };
 
@@ -67,6 +78,7 @@ const Signup = () => {
       <div className="main-content">
         <div className="login-form">
           <h2>Sign Up</h2>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <label htmlFor="username">Username:</label>
           <input
             type="text"
