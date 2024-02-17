@@ -77,3 +77,4 @@ The frontend folder contains:
 
 You have to make sure that your current directory is `softeng23-14/front-end`.
 First you need to write `npm install` if you didn't already. To start the front-end use `npm run dev`.
+To access this you need to write the following: http://localhost:3000/new, which represents the main page.
