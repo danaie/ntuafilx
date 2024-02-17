@@ -125,42 +125,36 @@ const SearchResultsPage = () => {
         <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
           Search Results for <span style={{ fontWeight: 'bold' }}>'{titlePart}'</span>
         </h2>
-        {results.length > 0 ? (
-          <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
-            {results.map((movie) => (
-              <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
+        {searchResults ? (
+          results.length > 0 ? (
+            <ul style={{ listStyleType: 'none', padding: 0, display: 'flex', flexWrap: 'wrap' }}>
+              {results.map((movie) => (
+               <li key={movie.titleID} style={{ width: '220px', margin: '10px' }}>
                <div className="movie-container" onClick={() => handleMovieClick(movie.titleID)}>
-                  <div className="movie-title">
-                    {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
-                  </div>
-                  <div className="movie-image">
-                    {movie.image ? (
-                      <img
-                        src={movie.image.replace('{width_variable}', 'w200')}
-                        alt={movie.originalTitle}
-                        style={{ width: '200px', height: '82%', objectFit: 'cover' }}
-                      />
-                    ) : (
-                      <div>No Image Available</div>
-                    )}
-                  </div>
-                  {/* Dynamically change the button text based on watchlist */}
-                  <button
-        onClick={() => addToWatchlist(movie.titleID)}
-        className="add-to-watchlist-button"
-      >
-        {watchlist.some((watchlistMovie) => watchlistMovie.titleID === movie.titleID)
-          ? 'Remove from Watchlist'
-          : 'Add to Watchlist'}
-      </button>
-
-
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : results.length === 0 ? (
-          <p style={{ textAlign: 'center' }}>No movies found with the title '{titlePart}'</p>
+                 <div className="movie-title">
+                   {movie.titleID && <span style={{ fontWeight: 'bold' }}>{movie.originalTitle}</span>}
+                 </div>
+                 <div className="movie-image">
+                   {movie.image ? (
+                     <img
+                       src={movie.image.replace('{width_variable}', 'w200')}
+                       alt={movie.originalTitle}
+                       style={{ width: '200px', height: '82%', objectFit: 'cover' }}
+                     />
+                   ) : (
+                     <div>No Image Available</div>
+                   )}
+                 </div>
+                 <button onClick={(e) => { e.stopPropagation(); addToWatchlist(movie.titleID); }} className="add-to-watchlist-button">
+    Add to Watchlist
+</button>
+               </div>
+             </li>
+              ))}
+            </ul>
+          ) : (
+            <p style={{ textAlign: 'center' }}>No movies found with the title '{titlePart}'</p>
+          )
         ) : (
           <p style={{ textAlign: 'center' }}>Invalid search query</p>
         )}
@@ -174,7 +168,7 @@ const SearchResultsPage = () => {
           cursor: pointer;
           align-self: flex-end;
           margin-top: auto;
-          margin-right: 40px;
+          margin-right: 45px;
         }
 
         .movie-container {

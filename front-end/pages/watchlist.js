@@ -46,19 +46,29 @@ const Watchlist = () => {
 
   const removeFromWatchlist = async (titleID) => {
     try {
-      await fetch(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
-        method: 'DELETE',
+      const token = localStorage.getItem('token'); // Retrieve access token from localStorage
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        return;
+      }
+  
+      await axios.delete(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
         headers: {
           'Content-Type': 'application/json',
+          'X-OBSERVATORY-AUTH': token, // Include access token in the request headers
         },
       });
-
-      fetchWatchlist();
+  
+      // Filter out the removed movie from the watchlist state
+      setWatchlist(prevWatchlist => prevWatchlist.filter(movie => movie.titleID !== titleID));
+  
+      // Print success message
+      console.log('Movie removed successfully.');
     } catch (error) {
       console.error('Error removing from watchlist:', error);
     }
   };
-
+  
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     router.push('/new'); // Navigate to the 'new.js' page on logout
@@ -155,7 +165,9 @@ const Watchlist = () => {
       ))}
     </ul>
   ) : (
-    <p>No movies in the watchlist</p>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+  <p>No movies in the watchlist</p>
+</div>
   )}
 </div>
 <style jsx>{`
