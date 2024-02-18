@@ -338,5 +338,5 @@ program
     }
   });
 
-
-program.parse(process.argv)
+  module.exports = program;
+//program.parse(process.argv)
