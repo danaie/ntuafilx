@@ -28,7 +28,7 @@ const getTitleObjectById = (titleID) => {
             if (err) {
                 console.log(err);
                 connection.release();
-                reject({ error: err });
+                reject({ error : err });
             } else {
                 connection.query(q1, [titleID], (error, result1) => {
                     if (error) {
@@ -134,14 +134,20 @@ exports.getTitleById = (req, res) => {
 };
 
 exports.getSearchTitle = (req, res) => {
+    //console.log('req.query title:', req.query);
+
     const { titlePart } = req.query;
-    if (titlePart === null || titlePart === undefined) {
+    const q = 'SELECT titleID FROM title WHERE originalTitle LIKE ?';
+
+    if (!titlePart) {
+        //console.log("titlepart missing")
         return res.status(400).json({
             success: 0,
             message: 'titlepart missing'
         });
     }
-    const q = 'SELECT titleID FROM title WHERE originalTitle LIKE ?';
+    //console.log("titlepart not missing")
+
     pool.query(q, [`%${titlePart}%`], (error, searchresults, fields) => {
         if (error) {
             console.error('Error executing query', error);
@@ -181,7 +187,7 @@ exports.getbyGendre =  (req, res, next) => {
     const { yrFrom } = req.query;
     const { yrTo } = req.query;
     
-    if (qgenre === null || minrating === null || qgenre === undefined || minrating === undefined) { 
+    if (!qgenre || !minrating ) { 
         return res.status(400).json({
             success: 0,
             message: 'qgenre and/or minrating missing'
@@ -204,6 +210,7 @@ exports.getbyGendre =  (req, res, next) => {
                 message: 'Movie not found'
             });
         }
+        
         const promises = searchresults.map((result) => {
             return getTitleObjectById(result.titleID)
                 .catch((error) => {
@@ -266,14 +273,18 @@ exports.getNameById = (req, res) => {
 };
 
 exports.getSearchName = (req, res) => {
-    const { namePart } = req.query;
+    //console.log('req.query:', req.query);
 
-    if (namePart === null || namePart === undefined) {
+    const { namePart } =  req.query;
+
+    if (!namePart) {
+        //console.log("namepart missing")
         return res.status(400).json({
             success: 0,
             message: 'namepart missing'
         });
     }
+    //console.log("namepart not missing")
 
     const q = 'SELECT basicsID FROM nameBasics WHERE primaryName LIKE ?';
 

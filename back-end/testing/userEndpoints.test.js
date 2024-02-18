@@ -105,7 +105,7 @@ describe("GET /ntuaflix_api/searchtitle/", () => {
             expect(res.headers['content-type']).toMatch(/json/)
           })   
   });
-  test('No title part, should return 400 Bad Request with movie not found message', async () => {
+  test('No title part, should return 400 Bad Request with titlepart missing', async () => {
       return request(app)
           .get(`/ntuaflix_api/searchtitle`)
           .then((res) => {
@@ -114,22 +114,23 @@ describe("GET /ntuaflix_api/searchtitle/", () => {
           })   
   });
 });
-const namepart = 'asa';
+const npart = 'asa';
 
 describe("GET /ntuaflix_api/searchname/", () => {
   test('should return all nameOBjects with original name match to the namepart', async () => {
       return request(app)
           .get(`/ntuaflix_api/searchname`, {
             params: {
-              namePart: namepart,
+              namePart: npart,
             },
           })
           .then((res) => {
+            
             expect(res.statusCode).toBe(200);
             expect(res.headers['content-type']).toMatch(/json/)
           })   
   });
-  test('No name part, should return 400 Bad Request with name not found message', async () => {
+  test('No name part, should return 400 Bad Request with namepart missing', async () => {
       return request(app)
           .get(`/ntuaflix_api/searchname/`)
           .then((res) => {
@@ -145,55 +146,56 @@ const from = "1990";
 const to = "2000";
 
 describe("GET /ntuaflix_api/bygenre/", () => {
-  test('should return all titleOBjects according to search parametres', async () => {
-      return request(app)
-          .get(`/ntuaflix_api/bygenre`, {
-            params: {
-              qgenre : qgenre,
-              minrating : min,
-              yrFrom : from,
-              toyrTo : to
-            },
-          })
-          .then((res) => {
-            expect(res.statusCode).toBe(200);
-            expect(res.headers['content-type']).toMatch(/json/)
-          })   
+  test('should return all titleOBjects according to search parameters', async () => {
+    return request(app)
+      .get(`/ntuaflix_api/bygenre`)
+      .query({
+        qgenre: qgenre,
+        minrating: min,
+        yrFrom: from,
+        toyrTo: to
+      })
+      .then((res) => {
+        expect(res.statusCode).toBe(200);
+        expect(res.headers['content-type']).toMatch(/json/);
+      });
   });
+
   test('Missing genre and minrating, should return 400 Bad Request', async () => {
-      return request(app)
-          .get(`/ntuaflix_api/bygenre/`)
-          .then((res) => {
-            expect(res.statusCode).toBe(400);
-            expect(res.body.message).toBe("qgenre and/or minrating missing");
-          })   
+    return request(app)
+      .get(`/ntuaflix_api/bygenre`)
+      .query({})
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("qgenre and/or minrating missing");
+      });
   });
+
   test('Missing genre, should return 400 Bad Request', async () => {
-      return request(app)
-      .get(`/ntuaflix_api/bygenre`, {
-        params: {
-          minrating : min,
-          yrFrom : from,
-          toyrTo : to
-        },
+    return request(app)
+      .get(`/ntuaflix_api/bygenre`)
+      .query({
+        minrating: min,
+        yrFrom: from,
+        toyrTo: to
       })
-          .then((res) => {
-            expect(res.statusCode).toBe(400);
-            expect(res.body.message).toBe("qgenre and/or minrating missing");
-          })   
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("qgenre and/or minrating missing");
+      });
   });
+
   test('Missing minrating, should return 400 Bad Request', async () => {
-      return request(app)
-      .get(`/ntuaflix_api/bygenre`, {
-        params: {
-          qgenre : qgenre,
-          yrFrom : from,
-          toyrTo : to
-        },
+    return request(app)
+      .get(`/ntuaflix_api/bygenre`)
+      .query({
+        qgenre: qgenre,
+        yrFrom: from,
+        toyrTo: to
       })
-          .then((res) => {
-            expect(res.statusCode).toBe(400);
-            expect(res.body.message).toBe("qgenre and/or minrating missing");
-          })   
+      .then((res) => {
+        expect(res.statusCode).toBe(400);
+        expect(res.body.message).toBe("qgenre and/or minrating missing");
+      });
   });
 });
