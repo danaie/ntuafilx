@@ -70,7 +70,7 @@ const Watchlist = () => {
   };
   
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem('token');
     router.push('/new'); // Navigate to the 'new.js' page on logout
   };
 
@@ -91,25 +91,24 @@ const Watchlist = () => {
 
   const addToWatchlist = async (titleID) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         console.error('User not authenticated. Please log in.');
         return;
       }
-  
+
       await axios.post(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, null, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-OBSERVATORY-AUTH': token, // Include access token in the request headers
+          Authorization: `Bearer ${token}`,
         },
       });
-  
+
       fetchWatchlist(); // Refresh watchlist data after adding a movie
     } catch (error) {
       console.error('Error adding to watchlist:', error);
     }
   };
-  
+
   const handleSearchClick = () => {
     router.push('/homepagewhenloggedin2');
   };
