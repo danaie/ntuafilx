@@ -16,6 +16,9 @@ create table user (
     isAdmin bool default false
 ) auto_increment = 1;
 
+INSERT INTO user (userID, username, password, isAdmin)
+VALUES (1, 'admin', '$2a$10$MumNRd7Kjyci2YYHp5zRx.ZPNrh1Y6fueA1CacVpbMFSVFcfMLceq', 1);
+
 create table title (
 	titleID varchar(10) primary key,
     titleType varchar(100) not null,
@@ -123,7 +126,7 @@ BEGIN
         SELECT table_name
         FROM information_schema.tables
         WHERE table_schema = 'imbd'
-        AND table_name != 'user'
+        AND table_name != 'user' AND table_name != 'watchlist'
         AND table_type = 'BASE TABLE';
 
     -- Declare continue handler to exit loop when no more tables are found
