@@ -27,7 +27,8 @@ exports.createUser = (req,res,next) => {
                             return res.status(500).json({ error: error});
                         };
                         console.log(result.insertId)
-                        return res.status(200).json({status:"OK", message:"User added succesfuly"});
+                        const token = createjwt(result.insertId, false);
+                        return res.status(200).json({status:"OK", message:"User added succesfuly", token: token});
                     });
                 }
             });
@@ -62,7 +63,8 @@ exports.createAdmin = (req,res,next) => {
                             return res.status(500).json({ error: error});
                         };
                         console.log(result)
-                        return res.status(200).json({status:"OK", message:"User added succesfuly"});
+                        const token = createjwt(result.insertId, true);
+                        return res.status(200).json({status:"OK", message:"User added succesfuly", token:token});
                     });
                 }
             });

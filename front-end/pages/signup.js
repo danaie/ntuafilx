@@ -36,7 +36,7 @@ const Signup = () => {
       // Redirect to homepage with user ID in the URL
       router.push(`/homepagewhenloggedin2`);
         console.log('Signup successful for user');
-      } else if (response.status === 409) {
+      } else if (response.status === 400) {
         // Server returns a 409 status (Conflict), indicating duplicate username
         setErrorMessage('Username already exists. Please choose a different username.');
       } else {
