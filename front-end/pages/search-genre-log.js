@@ -12,35 +12,126 @@ const SearchResultsPage = () => {
 
   const [movieData, setMovieData] = useState(null);
 
+  const [watchlist, setWatchlist] = useState([]);
+
+  useEffect(() => {
+    fetchWatchlist();
+  }, []);
+ 
+  const fetchWatchlist = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        router.push('/login');
+        // Handle the case where the user is not authenticated
+        return;
+      }
+   
+      const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist', {
+        headers: {
+          'X-OBSERVATORY-AUTH': token,
+        },
+      });
+   
+      if (response.status === 401) {
+        console.error('User not authenticated. Redirecting to login page.');
+        router.push('/login');
+        return;
+      }
+   
+      const responseData = await response.json();
+      const data = responseData.data; // Access the 'data' property from the response JSON
+   
+      setWatchlist(data); // Make sure data is an array of objects
+    } catch (error) {
+      console.error('Error fetching watchlist:', error);
+    }
+  };
+
+  const isInWatchlist = (titleID) => {
+    return watchlist.some(movie => movie.titleID === titleID);
+  };
+ 
+
+  const addToWatchlist = async (titleID) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        return;
+      }
+ 
+      const response = await axios.post(
+        `http://localhost:9876/ntuaflix_api/watchlist/${titleID}`,
+        null,
+        {
+          headers: {
+            'X-OBSERVATORY-AUTH': token,
+          },
+        }
+      );
+ 
+      console.log('Added to watchlist:', response.data);
+      fetchWatchlist(); // Refresh watchlist data after adding a movie
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+    }
+  };
+ 
+
+  const removeFromWatchlist = async (titleID) => {
+    try {
+      const token = localStorage.getItem('token'); // Retrieve access token from localStorage
+      if (!token) {
+        console.error('User not authenticated. Please log in.');
+        return;
+      }
+ 
+      await axios.delete(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-OBSERVATORY-AUTH': token, // Include access token in the request headers
+        },
+      });
+ 
+      // Filter out the removed movie from the watchlist state
+      setWatchlist(prevWatchlist => prevWatchlist.filter(movie => movie.titleID !== titleID));
+ 
+      // Print success message
+      console.log('Movie removed successfully.');
+    } catch (error) {
+      console.error('Error removing from watchlist:', error);
+    }
+  };
+ 
+
   const handleMovieClick = async (titleID) => {
     try {
-      let response;
-      response = await axios.get(`http://localhost:9876/ntuaflix_api/title/${titleID}`);
+      const response = await axios.get(`http://localhost:9876/ntuaflix_api/title/${titleID}`);
       console.log('Movie data response:', response.data);
-      //setMovieDetailsResults(response.data.data);
       router.push({
         pathname: '/movie-details2-log',
-        query: { titleID: titleID }, // Pass titleID as a query parameter
+        query: { titleID: titleID },
       });
     } catch (error) {
       console.error('Error fetching movie data:', error);
     }
   };
-  const handleSearchClick = () => {
-    // Navigate to the /new page
-    router.push('/homepagewhenloggedin2');
-  };
 
   const handleLogout = async () => {
     try {
-        await axios.get('http://localhost:9876/ntuaflix_api/logout');
-        localStorage.removeItem(token);
-        router.push('/new');
+      await axios.get('http://localhost:9876/ntuaflix_api/logout');
+      localStorage.removeItem('accessToken');
+      router.push('/new');
     } catch (error) {
-        console.error('Logout failed:', error);
-        // Handle any error appropriately
+      console.error('Logout failed:', error);
     }
-};
+  };
+
+  const handleSearchClick = () => {
+    router.push('/homepagewhenloggedin2');
+  };
   // Fetch movie data based on query parameters
   useEffect(() => {
     const fetchMoviesByGenre = async () => {
@@ -84,7 +175,7 @@ const SearchResultsPage = () => {
           <div className="login-button" onClick={handleLogout}>
       Logout
     </div>
-        </div>     
+        </div>    
         </div>
     <div>
     <h2 style={{ textAlign: 'center', fontWeight: 'normal' }}>
@@ -109,9 +200,18 @@ const SearchResultsPage = () => {
           <div>No Image Available</div>
         )}
       </div>
-      <button onClick={(e) => { e.stopPropagation(); addToWatchlist(movie.titleID); }} className="add-to-watchlist-button">
-Add to Watchlist
+      <button
+  onClick={(e) => {
+    e.stopPropagation();
+    isInWatchlist(movie.titleID) ? removeFromWatchlist(movie.titleID) : addToWatchlist(movie.titleID);
+  }}
+  className="add-to-watchlist-button"
+  style={{ margin: '0 auto', width: 'fit-content' }}
+>
+  {isInWatchlist(movie.titleID) ? 'Remove from Watchlist' : 'Add to Watchlist'}
 </button>
+
+
     </div>
   </li>
   ))
@@ -127,13 +227,13 @@ Add to Watchlist
         padding: 5px 10px;
         cursor: pointer;
       }
-      
+     
       .add-to-watchlist-button {
         align-self: flex-end;
         margin-top: auto;
         margin-right: 40px; /* Push the button to the bottom */
       }
-      
+     
       .movie-container {
         width: 215px;
         height: 350px; /* Adjust height as needed */
@@ -146,20 +246,20 @@ Add to Watchlist
       .movie-title {
         font-weight: bold;
       }
-      
+     
       .movie-image {
         flex: 1;
         display: flex;
         justify-content: center;
         align-items: center;
       }
-      
+     
       .movie-image img {
         max-width: 100%;
         max-height: 100%;
         object-fit: cover;
       }
-      
+     
        .select {
           padding: 12px;
           width: 100px;
