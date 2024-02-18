@@ -126,7 +126,7 @@ BEGIN
         SELECT table_name
         FROM information_schema.tables
         WHERE table_schema = 'imbd'
-        AND table_name != 'user' AND table_name != 'watchlist'
+        AND table_name != 'user'
         AND table_type = 'BASE TABLE';
 
     -- Declare continue handler to exit loop when no more tables are found

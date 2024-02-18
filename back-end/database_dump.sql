@@ -298,7 +298,7 @@ UNLOCK TABLES;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-CREATE DEFINER=`danai`@`localhost` PROCEDURE `ClearAllTables`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `ClearAllTables`()
 BEGIN
     DECLARE done INT DEFAULT 0;
     DECLARE tableName VARCHAR(255);
@@ -308,7 +308,7 @@ BEGIN
         SELECT table_name
         FROM information_schema.tables
         WHERE table_schema = 'imbd'
-        AND table_name != 'user' AND table_name != 'watchlist'
+        AND table_name != 'user'
         AND table_type = 'BASE TABLE';
 
     -- Declare continue handler to exit loop when no more tables are found
@@ -354,7 +354,7 @@ DELIMITER ;
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`danai`@`localhost` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `principalsList` AS select `principals`.`titleID` AS `titleID`,`principals`.`basicsID` AS `basicsID`,`nameBasics`.`primaryName` AS `primaryName`,`principals`.`category` AS `category` from (`principals` join `nameBasics` on((`principals`.`basicsID` = `nameBasics`.`basicsID`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
