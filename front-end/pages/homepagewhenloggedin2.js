@@ -3,9 +3,6 @@ import axios from 'axios';
 import { useRouter } from 'next/router'; // Import useRouter from next/router
 import '../styles/globalstyles.css';
 import Link from 'next/link';
-import Cookies from 'js-cookie';
-
-import Watchlist from './watchlist';
 
 const Search = () => {
   const [searchType, setSearchType] = useState('title');
@@ -28,10 +25,6 @@ const Search = () => {
       setIsLoggedIn(true);
     }
   }, []);
-
-  const isInWatchlist = (titleID) => {
-    return Watchlist.some(movie => movie.titleID === titleID);
-  };
 
   const handleLogout = async () => {
     try {
@@ -154,10 +147,6 @@ const Search = () => {
     }
   };
   
-  const handleWatchlistClick = (titleID) => {
-    // Call the addToWatchlist function from the Watchlist component
-    watchlistRef.current.addToWatchlist(titleID);
-  };
     return (
       <div className="home-container">
       <div className="header">
