@@ -23,22 +23,22 @@ const SearchResultsPage = () => {
         // Handle the case where the user is not authenticated
         return;
       }
-    
+   
       const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist', {
         headers: {
           'X-OBSERVATORY-AUTH': token,
         },
       });
-    
+   
       if (response.status === 401) {
         console.error('User not authenticated. Redirecting to login page.');
         router.push('/login');
         return;
       }
-    
+   
       const responseData = await response.json();
       const data = responseData.data; // Access the 'data' property from the response JSON
-    
+   
       setWatchlist(data); // Make sure data is an array of objects
     } catch (error) {
       console.error('Error fetching watchlist:', error);
@@ -48,7 +48,7 @@ const SearchResultsPage = () => {
   const isInWatchlist = (titleID) => {
     return watchlist.some(movie => movie.titleID === titleID);
   };
-  
+ 
 
   const addToWatchlist = async (titleID) => {
     try {
@@ -57,7 +57,7 @@ const SearchResultsPage = () => {
         console.error('User not authenticated. Please log in.');
         return;
       }
-  
+ 
       const response = await axios.post(
         `http://localhost:9876/ntuaflix_api/watchlist/${titleID}`,
         null,
@@ -67,14 +67,14 @@ const SearchResultsPage = () => {
           },
         }
       );
-  
+ 
       console.log('Added to watchlist:', response.data);
       fetchWatchlist(); // Refresh watchlist data after adding a movie
     } catch (error) {
       console.error('Error adding to watchlist:', error);
     }
   };
-  
+ 
 
   const removeFromWatchlist = async (titleID) => {
     try {
@@ -83,24 +83,24 @@ const SearchResultsPage = () => {
         console.error('User not authenticated. Please log in.');
         return;
       }
-  
+ 
       await axios.delete(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
         headers: {
           'Content-Type': 'application/json',
           'X-OBSERVATORY-AUTH': token, // Include access token in the request headers
         },
       });
-  
+ 
       // Filter out the removed movie from the watchlist state
       setWatchlist(prevWatchlist => prevWatchlist.filter(movie => movie.titleID !== titleID));
-  
+ 
       // Print success message
       console.log('Movie removed successfully.');
     } catch (error) {
       console.error('Error removing from watchlist:', error);
     }
   };
-  
+ 
 
   const handleMovieClick = async (titleID) => {
     try {
@@ -125,11 +125,12 @@ const SearchResultsPage = () => {
     }
   };
 
-  const results = searchResults ? JSON.parse(searchResults) : [];
-
   const handleSearchClick = () => {
     router.push('/homepagewhenloggedin2');
   };
+
+  const results = searchResults ? JSON.parse(searchResults) : [];
+
 
   return (
     <div className="home-container">
@@ -175,21 +176,16 @@ const SearchResultsPage = () => {
                      <div>No Image Available</div>
                    )}
                  </div>
-                 {isInWatchlist(movie.titleID) ? (
-                      <button className="watchlist-button" disabled>
-                        In Watchlist
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToWatchlist(movie.titleID);
-                        }}
-                        className="add-to-watchlist-button"
-                      >
-                        Add to Watchlist
-                      </button>
-                    )}
+                 <button
+  onClick={(e) => {
+    e.stopPropagation();
+    isInWatchlist(movie.titleID) ? removeFromWatchlist(movie.titleID) : addToWatchlist(movie.titleID);
+  }}
+  className="add-to-watchlist-button"
+  style={{ margin: '0 auto', width: 'fit-content' }}
+>
+  {isInWatchlist(movie.titleID) ? 'Remove from Watchlist' : 'Add to Watchlist'}
+</button>
                </div>
              </li>
               ))}
