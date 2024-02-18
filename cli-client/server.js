@@ -337,6 +337,9 @@ program
       console.error('Error fetching name information:', error.message);
     }
   });
-
+  
+  if (process.env.NODE_ENV !== 'test') {
+    program.parse(process.argv);
+  }
+  
   module.exports = program;
-//program.parse(process.argv)
