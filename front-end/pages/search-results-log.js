@@ -14,45 +14,19 @@ const SearchResultsPage = () => {
   useEffect(() => {
     fetchWatchlist();
   }, []);
+
   const fetchWatchlist = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        console.error('User not authenticated. Please log in.');
-        router.push('/login');
-        // Handle the case where the user is not authenticated
-        return;
-      }
-    
-      const response = await fetch('http://localhost:9876/ntuaflix_api/watchlist', {
-        headers: {
-          'X-OBSERVATORY-AUTH': token,
-        },
-      });
-    
-      if (response.status === 401) {
-        console.error('User not authenticated. Redirecting to login page.');
-        router.push('/login');
-        return;
-      }
-    
-      const responseData = await response.json();
-      const data = responseData.data; // Access the 'data' property from the response JSON
-    
-      setWatchlist(data); // Make sure data is an array of objects
+      const response = await axios.get('http://localhost:9876/ntuaflix_api/watchlist');
+      setWatchlist(response.data);
     } catch (error) {
       console.error('Error fetching watchlist:', error);
     }
   };
 
-  const isInWatchlist = (titleID) => {
-    return watchlist.some(movie => movie.titleID === titleID);
-  };
-  
-
   const addToWatchlist = async (titleID) => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         console.error('User not authenticated. Please log in.');
         return;
@@ -63,7 +37,7 @@ const SearchResultsPage = () => {
         null,
         {
           headers: {
-            'X-OBSERVATORY-AUTH': token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -78,24 +52,20 @@ const SearchResultsPage = () => {
 
   const removeFromWatchlist = async (titleID) => {
     try {
-      const token = localStorage.getItem('token'); // Retrieve access token from localStorage
+      const token = localStorage.getItem('accessToken');
       if (!token) {
         console.error('User not authenticated. Please log in.');
         return;
       }
   
-      await axios.delete(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
+      const response = await axios.delete(`http://localhost:9876/ntuaflix_api/watchlist/${titleID}`, {
         headers: {
-          'Content-Type': 'application/json',
-          'X-OBSERVATORY-AUTH': token, // Include access token in the request headers
+          Authorization: `Bearer ${token}`,
         },
       });
   
-      // Filter out the removed movie from the watchlist state
-      setWatchlist(prevWatchlist => prevWatchlist.filter(movie => movie.titleID !== titleID));
-  
-      // Print success message
-      console.log('Movie removed successfully.');
+      console.log('Removed from watchlist:', response.data);
+      fetchWatchlist(); // Refresh watchlist data after removing a movie
     } catch (error) {
       console.error('Error removing from watchlist:', error);
     }
@@ -118,7 +88,7 @@ const SearchResultsPage = () => {
   const handleLogout = async () => {
     try {
       await axios.get('http://localhost:9876/ntuaflix_api/logout');
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem('token');
       router.push('/new');
     } catch (error) {
       console.error('Logout failed:', error);
@@ -175,21 +145,9 @@ const SearchResultsPage = () => {
                      <div>No Image Available</div>
                    )}
                  </div>
-                 {isInWatchlist(movie.titleID) ? (
-                      <button className="watchlist-button" disabled>
-                        In Watchlist
-                      </button>
-                    ) : (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addToWatchlist(movie.titleID);
-                        }}
-                        className="add-to-watchlist-button"
-                      >
-                        Add to Watchlist
-                      </button>
-                    )}
+                 <button onClick={(e) => { e.stopPropagation(); addToWatchlist(movie.titleID); }} className="add-to-watchlist-button">
+    Add to Watchlist
+</button>
                </div>
              </li>
               ))}
