@@ -2,11 +2,11 @@ const { pool } = require('../utils/database');
 
 exports.getSearchTitleSimple = (req, res) => {
     const { titlePart } = req.query;
-    console.log(titlePart);
+    //console.log(titlePart);
     const q = 'SELECT titleID, originalTitle, image FROM title WHERE originalTitle LIKE ?';
     pool.query(q, [`%${titlePart}%`], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -31,7 +31,7 @@ exports.getbyGendreSimple =  (req, res, next) => {
     if (yrFrom != null && yrTo != null) { q = q + "AND startYear BETWEEN ? AND ?" }
     pool.query(q, [`%${qgenre}%`, minrating, yrFrom, yrTo], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -54,7 +54,7 @@ exports.getSearchNameSimple = (req, res) => {
 
     pool.query(q, [`%${namePart}%`], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -87,7 +87,7 @@ exports.getTopRated = (req,res,next) => {
 
 exports.getKnownFor = (req, res, next) => {
     const id = req.params.nameID;
-    console.log(id);
+    //console.log(id);
     const query = 'select t.titleID, t.image ,t.primaryTitle from nameBasics n join title t on FIND_IN_SET(t.titleID, n.knowForTitles) > 0 where n.basicsID = ?';
     pool.getConnection((err,connection) => {
         if (err)

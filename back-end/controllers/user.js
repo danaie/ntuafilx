@@ -4,7 +4,7 @@ exports.getTitles = (req, res, next) => {
     const q = 'SELECT originalTitle, titleID, image FROM title';
     pool.query(q, (error, results, fields) => {
         if (error) {
-            console.log('Error executing SELECT query:', error);
+            //console.log('Error executing SELECT query:', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -26,7 +26,7 @@ const getTitleObjectById = (titleID) => {
 
         pool.getConnection((err, connection) => {
             if (err) {
-                console.log(err);
+                //console.log(err);
                 connection.release();
                 reject({ error : err });
             } else {
@@ -128,7 +128,7 @@ exports.getTitleById = (req, res) => {
         return res.status(200).json(titleObject);
     })
     .catch((error) => {
-        console.error(error);
+        //console.error(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     });
 };
@@ -150,7 +150,7 @@ exports.getSearchTitle = (req, res) => {
 
     pool.query(q, [`%${titlePart}%`], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -165,7 +165,7 @@ exports.getSearchTitle = (req, res) => {
         const promises = searchresults.map((result) => {
             return getTitleObjectById(result.titleID)
                 .catch((error) => {
-                    console.error(error);
+                    //console.error(error);
                     return { error: 'Error getting title object' };
                 });
         });
@@ -175,7 +175,7 @@ exports.getSearchTitle = (req, res) => {
                 return res.status(200).json(titleObjects);
             })
             .catch((error) => {
-                console.error(error);
+                //console.error(error);
                 return res.status(500).json({ error: 'Internal Server Error' });
             });
     });
@@ -198,7 +198,7 @@ exports.getbyGendre =  (req, res, next) => {
     if (yrFrom != null && yrTo != null) { q = q + "AND startYear BETWEEN ? AND ?" }
     pool.query(q, [`%${qgenre}%`, minrating, yrFrom, yrTo], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -214,7 +214,7 @@ exports.getbyGendre =  (req, res, next) => {
         const promises = searchresults.map((result) => {
             return getTitleObjectById(result.titleID)
                 .catch((error) => {
-                    console.error(error);
+                    //console.error(error);
                     return { error: 'Error getting title object' };
                 });
             });
@@ -224,7 +224,7 @@ exports.getbyGendre =  (req, res, next) => {
                 return res.status(200).json(titleObjects);
             })
             .catch((error) => {
-                console.error(error);
+                //console.error(error);
                 return res.status(500).json({ error: 'Internal Server Error' });
             });
     });
@@ -235,7 +235,7 @@ exports.getNames =  (req, res, next) => {
     const q = 'SELECT primaryName FROM nameBasics';
     pool.query(q, (error, results, fields) => {
         if (error) {
-            console.error('Error executing SELECT query:', error);
+            //console.error('Error executing SELECT query:', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -284,13 +284,13 @@ exports.getSearchName = (req, res) => {
             message: 'namepart missing'
         });
     }
-    //console.log("namepart not missing")
+    ////console.log("namepart not missing")
 
     const q = 'SELECT basicsID FROM nameBasics WHERE primaryName LIKE ?';
 
     pool.query(q, [`%${namePart}%`], (error, searchresults, fields) => {
         if (error) {
-            console.error('Error executing query', error);
+            //console.error('Error executing query', error);
             return res.status(500).json({
                 success: 0,
                 message: 'Database error'
@@ -307,7 +307,7 @@ exports.getSearchName = (req, res) => {
         const promises = searchresults.map((result) => {
             return getnameObjectById(result.basicsID)  // Ensure basicsID matches the column name
                 .catch((error) => {
-                    console.error(error);
+                    //console.error(error);
                     return { error: 'Error getting name object' };
                 });
         });
@@ -315,12 +315,10 @@ exports.getSearchName = (req, res) => {
         Promise.all(promises)
             .then((nameObjects) => {
                 //console.log("Search Results:", nameObjects);
-                // If you want to filter out objects with errors, you can use:
-                // const validNameObjects = nameObjects.filter(obj => !obj.error);
                 return res.status(200).json(nameObjects);
             })
             .catch((error) => {
-                console.error(error);
+                //console.error(error);
                 return res.status(500).json({ error: 'Internal Server Error' });
             });
     });

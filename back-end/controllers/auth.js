@@ -14,19 +14,19 @@ exports.createUser = (req,res,next) => {
             const query = 'insert into user (username, password) values (?,?)';
             pool.getConnection((err,connection) => {
                 if (err) {
-                    console.log(error)
+                    //console.log(error)
                     return res.status(500).json({ error: err});
                 }
                 else {
                     connection.query(query,[username,hash], (error,result) => {
                         connection.release();
                         if (error) {
-                            console.log(error)
+                            //console.log(error)
                             if (error.code = 'ER_DUP_ENTRY')
                                 return res.status(400).json({error: 'Username already used'})
                             return res.status(500).json({ error: error});
                         };
-                        console.log(result.insertId)
+                        //console.log(result.insertId)
                         const token = createjwt(result.insertId, false);
                         return res.status(200).json({status:"OK", message:"User added succesfuly", token: token});
                     });
@@ -48,21 +48,21 @@ exports.createAdmin = (req,res,next) => {
             const query = 'insert into user (username, password, isAdmin) values (?,?,true)';
             pool.getConnection((err,connection) => {
                 if (err) {
-                    console.log(err)
+                    //console.log(err)
                     return res.status(500).json({ error: err});
                 }
                 else {
                     connection.query(query,[username,hash], (error,result) => {
                         connection.release();
                         if (error) {
-                            console.log(error)
+                            //console.log(error)
                             if (error.code == 'ER_DUP_ENTRY')
                                 return res.status(400).json({error: 'Username already used'})
                             if (error.code == 'ER_DATA_TOO_LONG')
                                 return res.status(400).json({error:"Username or password too long"});
                             return res.status(500).json({ error: error});
                         };
-                        console.log(result)
+                        //console.log(result)
                         const token = createjwt(result.insertId, true);
                         return res.status(200).json({status:"OK", message:"User added succesfuly", token:token});
                     });
@@ -77,14 +77,14 @@ exports.deleteAdmin = (req,res,next) => {
     const query = 'delete from user where username = ?';
     pool.getConnection((err,connection) => {
         if (err) {
-            console.log(err)
+            //console.log(err)
             return res.status(500).json({ error: err});
         }
         else {
             connection.query(query, username, (error,result) => {
                 connection.release();
                 if (error) {
-                    console.log(error)
+                    //console.log(error)
                     return res.status(500).json({ error: error});
                 };
                 if (result.affectedRows === 0)
@@ -104,7 +104,7 @@ exports.login = (req,res,next) => {
     const query = 'select * from user where username = ?';
     pool.getConnection((err,connection) => {
         if (err) {
-            console.log(err)
+            //console.log(err)
             return res.status(500).json({ error: err});
         }
         else {
@@ -112,7 +112,7 @@ exports.login = (req,res,next) => {
                 connection.release();
                 //console.log(result);
                 if (error) {
-                    console.log(error)
+                    //console.log(error)
                     return res.status(500).json({ error: error});
                 };
                 if (result.length == 0)
@@ -144,7 +144,7 @@ exports.viewUser = (req,res,next) => {
     const query = 'select * from user where username = ?';
     pool.getConnection((err,connection) => {
         if (err) {
-            console.log(err)
+            //console.log(err)
             return res.status(500).json({ error: err});
         }
         else {
@@ -152,7 +152,7 @@ exports.viewUser = (req,res,next) => {
                 connection.release();
                 //console.log(result);
                 if (error) {
-                    console.log(error)
+                    //console.log(error)
                     return res.status(500).json({ error: error});
                 };
                 if (result.length == 0)
@@ -169,15 +169,15 @@ exports.profile = (req,res,next) => {
     const query = 'select * from user where userID = ?';
     pool.getConnection((err,connection) => {
         if (err) {
-            console.log(err)
+            //console.log(err)
             return res.status(500).json({ error: err});
         }
         else {
             connection.query(query, userid, (error,result) => {
                 connection.release();
-                //console.log(result);
+                ////console.log(result);
                 if (error) {
-                    console.log(error)
+                    //console.log(error)
                     return res.status(500).json({ error: error});
                 };
                 return res.status(200).json(result[0]);
