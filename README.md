@@ -56,6 +56,7 @@ Cli-client commands:
 * information about a crew member: se2314 name --nameid &lt;nameid&gt;
 * search crew member: se2314 searchname --name &lt;namepart&gt;
 
+there is a user with username admin and password admin
 
 ### **To run any commands in the cli-client:**
 
